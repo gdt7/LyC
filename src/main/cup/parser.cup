@@ -13,8 +13,26 @@ terminal MULT;
 terminal DIV;
 terminal OPEN_BRACKET;
 terminal CLOSE_BRACKET;
+terminal OPEN_CURLY;
+terminal CLOSE_CURLY;
 terminal INTEGER_CONSTANT;
+terminal STRING_CONSTANT;
 terminal IDENTIFIER;
+terminal WHILE;
+terminal GREAT_THAN;
+terminal LESS_THAN;
+terminal IF;
+terminal ELSE;
+terminal INIT;
+terminal AND;
+terminal OR;
+terminal NOT;
+terminal FLOAT;
+terminal INT;
+terminal STRING; 
+terminal READ;
+terminal WRITE;
+
 
 // Non Terminals
 non terminal sentence;
