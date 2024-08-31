@@ -33,6 +33,20 @@ LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
 Identation =  [ \t\f]
 
+
+
+While = "mientras"
+If = "si"
+Else = "sino"
+Init = "init"
+And = "AND"
+Or = "OR"
+Not = "NOT"
+Float = "Float"
+Int = "Int"
+String = "String"
+Read = "leer"
+Write = "escribir"
 Plus = "+"
 Mult = "*"
 Sub = "-"
@@ -61,22 +75,21 @@ Comment = {CommentStart}({Digit}|{Letter})*{CommentEnd}
 
 
 /* keywords */
-/*while*/
-<YYINITIAL> "mientras"  {return symbol(ParserSym.WHILE); }
-<YYINITIAL> "si"  {return symbol(ParserSym.IF); }
-<YYINITIAL> "sino"  {return symbol(ParserSym.ELSE); }
-<YYINITIAL> "init"  {return symbol(ParserSym.INIT); }
-<YYINITIAL> "AND"  {return symbol(ParserSym.AND); }
-<YYINITIAL> "OR"  {return symbol(ParserSym.OR); }
-<YYINITIAL> "NOT"  {return symbol(ParserSym.NOT); }
-<YYINITIAL> "Float"  {return symbol(ParserSym.FLOAT); }
-<YYINITIAL> "Int"  {return symbol(ParserSym.INT); }
-<YYINITIAL> "String"  {return symbol(ParserSym.STRING); }
-<YYINITIAL> "Leer"  {return symbol(ParserSym.READ); }
-<YYINITIAL> "escribir"  {return symbol(ParserSym.WRITE); }
-
-
 <YYINITIAL> {
+
+  {While}                                   {return symbol(ParserSym.WHILE); }
+  {If}  									{return symbol(ParserSym.IF); }
+  {Else}  									{return symbol(ParserSym.ELSE); }
+  {Init}  									{return symbol(ParserSym.INIT); }
+  {And}  									{return symbol(ParserSym.AND); }
+  {Or}  									{return symbol(ParserSym.OR); }
+  {Not}  									{return symbol(ParserSym.NOT); }
+  {Float}  									{return symbol(ParserSym.FLOAT); }
+  {Int}  									{return symbol(ParserSym.INT); }
+  {String}  								{return symbol(ParserSym.STRING); }
+  {Read}  									{return symbol(ParserSym.READ); }
+  {Write}  									{return symbol(ParserSym.WRITE); }
+
   /* identifiers */
   {Identifier}                              { return symbol(ParserSym.IDENTIFIER, yytext()); }
   /* Constants */
@@ -98,6 +111,8 @@ Comment = {CommentStart}({Digit}|{Letter})*{CommentEnd}
   
   {GreatThan} 								{ return symbol(ParserSym.GREAT_THAN); }
   {LessThan}								{ return symbol(ParserSym.LESS_THAN); }   
+  
+  
   
 }
 

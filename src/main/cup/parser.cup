@@ -38,17 +38,23 @@ terminal WRITE;
 non terminal sentence;
 non terminal assignment;
 non terminal expression;
+non terminal comparison;
 non terminal term;
 non terminal factor;
+non terminal if_sent;
+non terminal if_else_sent;
+non terminal while_sent;
+
 
 // Start Symbol Definition
 start with sentence;
-
-sentence ::= assignment {: System.out.println("End"); :};
+sentence   ::= assignment {: System.out.println("End"); :};
+if_sent    ::= IF OPEN_BRACKET IDENTIFIER comparison IDENTIFIER CLOSE_BRACKET OPEN_CURLY  {: System.out.println("IF"); :};
 assignment ::= IDENTIFIER ASSIG expression {: System.out.println("Assignment"); :};
 expression ::= expression PLUS term {: System.out.println("+"); :};
 expression ::= expression SUB term {: System.out.println("-"); :};
 expression ::= term {: System.out.println("Expression = Term"); :};
+comparison ::= GREAT_THAN | LESS_THAN {: System.out.println("Comparison"); :};
 term ::= term MULT factor {: System.out.println("*"); :};
 term ::= term DIV factor {: System.out.println("/"); :};
 term ::= factor {: System.out.println("Term = factor"); :};
