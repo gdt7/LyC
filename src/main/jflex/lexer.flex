@@ -37,7 +37,7 @@ Plus = "+"
 Mult = "*"
 Sub = "-"
 Div = "/"
-Assig = ":""="
+Assig = ":="
 OpenBracket = "("
 CloseBracket = ")"
 OpenCurly = "{"
@@ -53,7 +53,7 @@ Digit = [0-9]
 DoubleQuote = "\""
 WhiteSpace = {LineTerminator} | {Identation}
 Identifier = {Letter} ({Letter}|{Digit})*
-IntegerConstant = {Digit}+
+IntegerConstant = [-]?{Digit}+
 StringConstant = {DoubleQuote}({Letter}|{Digit}|{WhiteSpace})+{DoubleQuote}
 
 Comment = "/*"([^\r\n]|"\r"? "\n")*"*/"
@@ -62,7 +62,7 @@ Comment = "/*"([^\r\n]|"\r"? "\n")*"*/"
 
 /* keywords */
 /*while*/
-<YYINITIAL> "mientras"  {return symbol(ParserSym.WHILE); }
+<YYINITIAL> "mientras"  {System.out.println("Token: " + yytext() + " | Tipo: MIENTRAS"); return symbol(ParserSym.WHILE); }
 <YYINITIAL> "si"  {return symbol(ParserSym.IF); }
 <YYINITIAL> "sino"  {return symbol(ParserSym.ELSE); }
 <YYINITIAL> "init"  {return symbol(ParserSym.INIT); }
@@ -74,30 +74,38 @@ Comment = "/*"([^\r\n]|"\r"? "\n")*"*/"
 <YYINITIAL> "String"  {return symbol(ParserSym.STRING); }
 <YYINITIAL> "Leer"  {return symbol(ParserSym.READ); }
 <YYINITIAL> "escribir"  {return symbol(ParserSym.WRITE); }
+<YYINITIAL> "public" { System.out.println("Token: " + yytext() + " | Tipo: PUBLIC");return symbol(ParserSym.PUBLIC); }
+<YYINITIAL> "class" { System.out.println("Token: " + yytext() + " | Tipo: CLASS");return symbol(ParserSym.CLASS); }
+<YYINITIAL> "static" { System.out.println("Token: " + yytext() + " | Tipo: STATIC");return symbol(ParserSym.STATIC); }
+<YYINITIAL> "void" { System.out.println("Token: " + yytext() + " | Tipo: VOID");return symbol(ParserSym.VOID); }
+<YYINITIAL> "main" { System.out.println("Token: " + yytext() + " | Tipo: MAIN");return symbol(ParserSym.MAIN); }
 
 
 <YYINITIAL> {
   /* identifiers */
   {Identifier}                              {   
-												//System.out.println("Token: " + yytext() + " | Tipo: ID"); return symbol(ParserSym.ID, yytext()); 
+												
 												if (yytext().length() > 50) {
 													throw new InvalidLengthException("Identifier too long: " + yytext());
 												  }
+												  System.out.println("Token: " + yytext() + " | Tipo: ID"); 
 												  return symbol(ParserSym.ID, yytext()); 
 											}
   /* Constants */
-  {IntegerConstant}                         {   //System.out.println("Token: " + yytext() + " | Tipo: CONST_ENT"); return symbol(ParserSym.CONST_ENT, yytext()); 
-													try {
+  {IntegerConstant}                         {							
+												try {
 													Integer.parseInt(yytext());
 												  } catch (NumberFormatException e) {
 													throw new InvalidIntegerException("Invalid integer constant: " + yytext());
 												  }
+												  System.out.println("Token: " + yytext() + " | Tipo: CONST_ENT");
 												  return symbol(ParserSym.CONST_ENT, yytext());
 											}
-  {StringConstant} 							{   //System.out.println("Token: " + yytext() + " | Tipo: CONST_ENT"); return symbol(ParserSym.STRING_CONSTANT, yytext()); 
+  {StringConstant} 							{    
 												if (yytext().length() > 50) {
 													throw new InvalidLengthException("String constant too long: " + yytext());
 												  }
+												  System.out.println("Token: " + yytext() + " | Tipo: CONST_ENT");
 												  return symbol(ParserSym.STRING_CONSTANT, yytext());
 											}
   /* operators */
