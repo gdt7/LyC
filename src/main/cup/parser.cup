@@ -6,58 +6,160 @@ class Parser;
 
 
 // Terminals
-terminal ASSIG;
-terminal PLUS;
-terminal SUB;
-terminal MULT;
-terminal DIV;
-terminal OPEN_BRACKET;
-terminal CLOSE_BRACKET;
-terminal OPEN_CURLY;
-terminal CLOSE_CURLY;
-terminal INTEGER_CONSTANT;
+terminal OP_ASIG;
+terminal OP_MAS;
+terminal OP_RES;
+terminal OP_MULT;
+terminal OP_DIV;
+terminal PAR_A;
+terminal PAR_C;
+terminal LLAVE_A;
+terminal LLAVE_C;
+terminal CONST_ENT;
 terminal STRING_CONSTANT;
-terminal IDENTIFIER;
+terminal ID;
 terminal WHILE;
-terminal GREAT_THAN;
-terminal LESS_THAN;
+terminal OP_MAY;
+terminal OP_MEN;
+terminal OP_IG;
+terminal OP_MAYIG;
+terminal OP_MENIG;
+terminal FOR;
 terminal IF;
 terminal ELSE;
-terminal INIT;
 terminal AND;
 terminal OR;
-terminal NOT;
 terminal FLOAT;
 terminal INT;
 terminal STRING; 
+terminal STATIC;
+terminal PUBLIC;
+terminal CLASS;
+terminal PYC;
+terminal VOID;
+terminal MAIN;
 terminal READ;
 terminal WRITE;
+terminal INIT;
+terminal NOT;
+terminal CLOSE_SQUARE;
+terminal OPEN_SQUARE;
+
 
 
 // Non Terminals
-non terminal sentence;
-non terminal assignment;
-non terminal expression;
-non terminal comparison;
-non terminal term;
+non terminal ss;
+non terminal programa;
+non terminal sentencia;
+non terminal asignacion;
+non terminal iteracion;
+non terminal seleccion;
+non terminal condicion;
+non terminal comparacion;
+non terminal comparador;
+non terminal expresion;
+non terminal termino;
 non terminal factor;
-non terminal if_sent;
-non terminal if_else_sent;
-non terminal while_sent;
-
 
 // Start Symbol Definition
-start with sentence;
-sentence   ::= assignment {: System.out.println("End"); :};
-if_sent    ::= IF OPEN_BRACKET IDENTIFIER comparison IDENTIFIER CLOSE_BRACKET OPEN_CURLY  {: System.out.println("IF"); :};
-assignment ::= IDENTIFIER ASSIG expression {: System.out.println("Assignment"); :};
-expression ::= expression PLUS term {: System.out.println("+"); :};
-expression ::= expression SUB term {: System.out.println("-"); :};
-expression ::= term {: System.out.println("Expression = Term"); :};
-comparison ::= GREAT_THAN | LESS_THAN {: System.out.println("Comparison"); :};
-term ::= term MULT factor {: System.out.println("*"); :};
-term ::= term DIV factor {: System.out.println("/"); :};
-term ::= factor {: System.out.println("Term = factor"); :};
-factor ::= IDENTIFIER:id  {: System.out.println("Id: " + id); :};
-factor ::= INTEGER_CONSTANT:constant {: System.out.println("Constant: " + constant ); :};
-factor ::= OPEN_BRACKET expression CLOSE_BRACKET {: System.out.println("Factor = (Expression)"); :};
+// Start Symbol Definition
+start with ss;
+
+// Grammar Rules
+ss 
+    ::= PUBLIC CLASS ID LLAVE_A PUBLIC STATIC VOID MAIN PAR_A STRING OPEN_SQUARE CLOSE_SQUARE ID PAR_C LLAVE_A programa LLAVE_C LLAVE_C
+    {: System.out.println("Inicio del programa principal"); :}
+    ;
+
+programa 
+    ::= sentencia 
+    {: System.out.println("Sentencia única en el programa: "); :}
+    | sentencia PYC 
+    {: System.out.println("Sentencia con punto y coma en el programa: "); :}
+    | programa sentencia
+    {: System.out.println("Programa con múltiples sentencias: "); :}
+    ;
+
+sentencia 
+    ::= asignacion 
+    {: System.out.println("Asignación encontrada"); :}
+    | iteracion 
+    {: System.out.println("Iteración encontrada"); :}
+    | seleccion
+    {: System.out.println("Selección encontrada"); :}
+    ;
+
+asignacion 
+    ::= INT ID OP_ASIG expresion PYC 
+    {: System.out.println("Asignación de tipo entero: " + " = "); :}
+    | ID OP_ASIG expresion
+    {: System.out.println("Asignación: " + " = "); :}
+    ;
+
+seleccion 
+    ::= IF condicion LLAVE_A programa LLAVE_C 
+    {: System.out.println("Estructura if con condición: "); :}
+    | IF condicion LLAVE_A programa LLAVE_C ELSE LLAVE_A programa LLAVE_C
+    {: System.out.println("Estructura if-else con condición: "); :}
+    ;
+
+iteracion 
+    ::= WHILE condicion LLAVE_A programa LLAVE_C 
+    {: System.out.println("Estructura while con condición: "); :}
+    | FOR PAR_A asignacion PYC condicion PYC expresion PAR_C LLAVE_A programa LLAVE_C
+    {: System.out.println("Estructura for con asignación: " +", condición: " + ", y expresión: " ); :}
+    ;
+ 
+ condicion 
+    ::= comparacion 
+    {: System.out.println("Condición simple: "); :}
+    | condicion AND comparacion 
+    {: System.out.println("Condición compuesta con AND: " +  " && "); :}
+    | condicion OR comparacion
+    {: System.out.println("Condición compuesta con OR: " + " || "); :}
+    ;
+
+comparacion 
+    ::= expresion comparador expresion
+    {: System.out.println("Comparación: "); :}
+    ;
+
+comparador 
+    ::= OP_MAYIG 
+    {: System.out.println("Comparador >= "); :}
+    | OP_MENIG 
+    {: System.out.println("Comparador <= "); :}
+    | OP_MAY 
+    {: System.out.println("Comparador > "); :}
+    | OP_MEN 
+    {: System.out.println("Comparador < "); :}
+    | OP_IG
+    {: System.out.println("Comparador == "); :}
+    ;
+
+expresion 
+    ::= expresion OP_MAS termino 
+    {: System.out.println("Expresión suma: "); :}
+    | expresion OP_RES termino 
+    {: System.out.println("Expresión resta: "); :}
+    | termino
+    {: System.out.println("Expresión simple: "); :}
+    ;
+
+termino 
+    ::= termino OP_MULT factor 
+    {: System.out.println("Término multiplicación: "); :}
+    | termino OP_DIV factor 
+    {: System.out.println("Término división: " + " / "); :}
+    | factor
+    {: System.out.println("Término simple: " ); :}
+    ;
+
+factor 
+    ::= ID 
+    {: System.out.println("Factor identificador: " ); :}
+    | CONST_ENT 
+    {: System.out.println("Factor constante entera: " ); :}
+    | PAR_A expresion PAR_C
+    {: System.out.println("Factor expresión entre paréntesis: "); :}
+    ;

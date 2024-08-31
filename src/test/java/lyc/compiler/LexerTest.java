@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+
 import java.io.IOException;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -18,19 +19,18 @@ import static lyc.compiler.constants.Constants.MAX_LENGTH;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-//@Disabled
 public class LexerTest {
 
   private Lexer lexer;
 
 
-  //@Test
+  @Test
   public void comment() throws Exception{
     scan("/*This is a comment*/");
     assertThat(nextToken()).isEqualTo(ParserSym.EOF);
   }
 
-  //@Test
+  @Test
   public void invalidStringConstantLength() {
     assertThrows(InvalidLengthException.class, () -> {
       scan("\"%s\"".formatted(getRandomString()));
@@ -38,7 +38,7 @@ public class LexerTest {
     });
   }
 
-  //@Test
+  @Test
   public void invalidIdLength() {
     assertThrows(InvalidLengthException.class, () -> {
       scan(getRandomString());
@@ -46,7 +46,7 @@ public class LexerTest {
     });
   }
 
-  //@Test
+  @Test
   public void invalidPositiveIntegerConstantValue() {
     assertThrows(InvalidIntegerException.class, () -> {
       scan("%d".formatted(9223372036854775807L));
@@ -66,17 +66,17 @@ public class LexerTest {
   @Test
   public void assignmentWithExpressions() throws Exception {
     scan("c:=d*(e-21)/4");
-    assertThat(nextToken()).isEqualTo(ParserSym.IDENTIFIER);
-    assertThat(nextToken()).isEqualTo(ParserSym.ASSIG);
-    assertThat(nextToken()).isEqualTo(ParserSym.IDENTIFIER);
-    assertThat(nextToken()).isEqualTo(ParserSym.MULT);
-    assertThat(nextToken()).isEqualTo(ParserSym.OPEN_BRACKET);
-    assertThat(nextToken()).isEqualTo(ParserSym.IDENTIFIER);
-    assertThat(nextToken()).isEqualTo(ParserSym.SUB);
-    assertThat(nextToken()).isEqualTo(ParserSym.INTEGER_CONSTANT);
-    assertThat(nextToken()).isEqualTo(ParserSym.CLOSE_BRACKET);
-    assertThat(nextToken()).isEqualTo(ParserSym.DIV);
-    assertThat(nextToken()).isEqualTo(ParserSym.INTEGER_CONSTANT);
+    assertThat(nextToken()).isEqualTo(ParserSym.ID);
+    assertThat(nextToken()).isEqualTo(ParserSym.OP_ASIG);
+    assertThat(nextToken()).isEqualTo(ParserSym.ID);
+    assertThat(nextToken()).isEqualTo(ParserSym.OP_MULT);
+    assertThat(nextToken()).isEqualTo(ParserSym.PAR_A);
+    assertThat(nextToken()).isEqualTo(ParserSym.ID);
+    assertThat(nextToken()).isEqualTo(ParserSym.OP_RES);
+    assertThat(nextToken()).isEqualTo(ParserSym.CONST_ENT);
+    assertThat(nextToken()).isEqualTo(ParserSym.PAR_C);
+    assertThat(nextToken()).isEqualTo(ParserSym.OP_DIV);
+    assertThat(nextToken()).isEqualTo(ParserSym.CONST_ENT);
     assertThat(nextToken()).isEqualTo(ParserSym.EOF);
   }
 
@@ -92,9 +92,9 @@ public class LexerTest {
   public void whileImpl() throws Exception {
 	  scan("mientras ( a>b)");
 	  assertThat(nextToken()).isEqualTo(ParserSym.WHILE);
-	  assertThat(nextToken()).isEqualTo(ParserSym.OPEN_BRACKET);
-	  assertThat(nextToken()).isEqualTo(ParserSym.IDENTIFIER);
-	  assertThat(nextToken()).isEqualTo(ParserSym.GREAT_THAN);
+	  assertThat(nextToken()).isEqualTo(ParserSym.PAR_A);
+	  assertThat(nextToken()).isEqualTo(ParserSym.ID);
+	  assertThat(nextToken()).isEqualTo(ParserSym.OP_MAY);
 	  
   }
   
@@ -102,9 +102,9 @@ public class LexerTest {
   public void whileImpl3() throws Exception {
 	  scan("mientras ( a>b)");
 	  assertThat(nextToken()).isEqualTo(ParserSym.WHILE);
-	  assertThat(nextToken()).isEqualTo(ParserSym.OPEN_BRACKET);
-	  assertThat(nextToken()).isEqualTo(ParserSym.IDENTIFIER);
-	  assertThat(nextToken()).isEqualTo(ParserSym.GREAT_THAN);
+	  assertThat(nextToken()).isEqualTo(ParserSym.PAR_A);
+	  assertThat(nextToken()).isEqualTo(ParserSym.ID);
+	  assertThat(nextToken()).isEqualTo(ParserSym.OP_MAY);
 	  
   }
   
@@ -112,9 +112,9 @@ public class LexerTest {
   public void whileImpl2() throws Exception {
 	  scan("mientras ( a>b)");
 	  assertThat(nextToken()).isEqualTo(ParserSym.WHILE);
-	  assertThat(nextToken()).isEqualTo(ParserSym.OPEN_BRACKET);
-	  assertThat(nextToken()).isEqualTo(ParserSym.IDENTIFIER);
-	  assertThat(nextToken()).isEqualTo(ParserSym.GREAT_THAN);
+	  assertThat(nextToken()).isEqualTo(ParserSym.PAR_A);
+	  assertThat(nextToken()).isEqualTo(ParserSym.ID);
+	  assertThat(nextToken()).isEqualTo(ParserSym.OP_MAY);
 	  
   }
   
@@ -122,26 +122,26 @@ public class LexerTest {
   public void ifElseImpl() throws Exception {
 	  scan("si(a>b){ escribir(\"aesmasgrandequeb\")}sino{escribir(\"a es mas chico o igual a b\")}");
 	  assertThat(nextToken()).isEqualTo(ParserSym.IF);
-	  assertThat(nextToken()).isEqualTo(ParserSym.OPEN_BRACKET);
-	  assertThat(nextToken()).isEqualTo(ParserSym.IDENTIFIER);
-	  assertThat(nextToken()).isEqualTo(ParserSym.GREAT_THAN);
-	  assertThat(nextToken()).isEqualTo(ParserSym.IDENTIFIER);
-	  assertThat(nextToken()).isEqualTo(ParserSym.CLOSE_BRACKET);
-	  assertThat(nextToken()).isEqualTo(ParserSym.OPEN_CURLY);
+	  assertThat(nextToken()).isEqualTo(ParserSym.PAR_A);
+	  assertThat(nextToken()).isEqualTo(ParserSym.ID);
+	  assertThat(nextToken()).isEqualTo(ParserSym.OP_MAY);
+	  assertThat(nextToken()).isEqualTo(ParserSym.ID);
+	  assertThat(nextToken()).isEqualTo(ParserSym.PAR_C);
+	  assertThat(nextToken()).isEqualTo(ParserSym.LLAVE_A);
 	  assertThat(nextToken()).isEqualTo(ParserSym.WRITE);
-	  assertThat(nextToken()).isEqualTo(ParserSym.OPEN_BRACKET);
+	  assertThat(nextToken()).isEqualTo(ParserSym.PAR_A);
 	  assertThat(nextToken()).isEqualTo(ParserSym.STRING_CONSTANT);
-	  assertThat(nextToken()).isEqualTo(ParserSym.CLOSE_BRACKET);
-	  assertThat(nextToken()).isEqualTo(ParserSym.CLOSE_CURLY);
+	  assertThat(nextToken()).isEqualTo(ParserSym.PAR_C);
+	  assertThat(nextToken()).isEqualTo(ParserSym.LLAVE_C);
   }
   
   @Test
   public void ifImpl() throws Exception {
 	  scan("si ( a>b)");
 	  assertThat(nextToken()).isEqualTo(ParserSym.IF);
-	  assertThat(nextToken()).isEqualTo(ParserSym.OPEN_BRACKET);
-	  assertThat(nextToken()).isEqualTo(ParserSym.IDENTIFIER);
-	  assertThat(nextToken()).isEqualTo(ParserSym.GREAT_THAN);
+	  assertThat(nextToken()).isEqualTo(ParserSym.PAR_A);
+	  assertThat(nextToken()).isEqualTo(ParserSym.ID);
+	  assertThat(nextToken()).isEqualTo(ParserSym.OP_MAY);
 	  
   }
   
