@@ -1,8 +1,18 @@
 package lyc.compiler;
 
 import java_cup.runtime.*;
+import java.util.HashMap;
+import java.util.Map;
 
 class Parser;
+
+action code {:
+	Object currIdent,currentValue;
+:}
+parser code
+{:
+	public Map<Object,Object> table = new HashMap();
+:};
 
 
 // Terminals
@@ -90,10 +100,18 @@ sentencia
     ;
 
 asignacion 
-    ::= INT ID OP_ASIG expresion PYC 
-    {: System.out.println("Asignación de tipo entero: " + " = "); :}
-    | ID OP_ASIG expresion
-    {: System.out.println("Asignación: " + " = "); :}
+    ::= INT ID:ident OP_ASIG expresion:expr PYC 
+    {: 
+    	currIdent = ident;
+    	System.out.println("Currident: " + currIdent.toString());
+    	System.out.println("Asignación de tipo entero: " + " = "); 
+    	table.put(currIdent,currentValue);
+    	:}
+    | ID:ident OP_ASIG expresion:expr PYC
+    {: 
+    	System.out.println("Asignación: " + " = "); 
+    :}
+    
     ;
 
 seleccion 
@@ -143,7 +161,10 @@ expresion
     | expresion OP_RES termino 
     {: System.out.println("Expresión resta: "); :}
     | termino
-    {: System.out.println("Expresión simple: "); :}
+    {:
+    	System.out.println("Expresión simple: "); 
+    	
+    :}
     ;
 
 termino 
@@ -156,10 +177,16 @@ termino
     ;
 
 factor 
-    ::= ID 
-    {: System.out.println("Factor identificador: " ); :}
-    | CONST_ENT 
-    {: System.out.println("Factor constante entera: " ); :}
+    ::= ID:value 
+    {:	
+    	currentValue = value;
+    	System.out.println("Factor identificador: " ); 
+    :}
+    | CONST_ENT:value 
+    {: 
+    	System.out.println("Factor constante entera: " ); 
+    	currentValue = value;
+    :}
     | PAR_A expresion PAR_C
     {: System.out.println("Factor expresión entre paréntesis: "); :}
     ;

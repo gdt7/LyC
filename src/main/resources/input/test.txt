@@ -1,5 +1,9 @@
+*-soy un comentario-*
 public class MiClase {
     public static void main(String[] args) {
         int c := 45;
+        int b := 90;
+        int a := b;
     }
 }
+
