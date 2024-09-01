@@ -1,15 +1,5 @@
 public class MiClase {
     public static void main(String[] args) {
-        int c;
-        int d;
-        int e;
-        
-        c = d * (e - 21) / 4;
-        
-        if (c < d) {
-            escribir("c es menor que d");
-        } else {
-            escribir("c es mayor o igual que d");
-        }
+        int c := 45;
     }
 }

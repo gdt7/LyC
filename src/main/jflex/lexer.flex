@@ -70,8 +70,8 @@ Comment = "/*"([^\r\n]|"\r"? "\n")*"*/"
 <YYINITIAL> "OR"  {return symbol(ParserSym.OR); }
 <YYINITIAL> "NOT"  {return symbol(ParserSym.NOT); }
 <YYINITIAL> "Float"  {return symbol(ParserSym.FLOAT); }
-<YYINITIAL> "Int"  {return symbol(ParserSym.INT); }
-<YYINITIAL> "String"  {return symbol(ParserSym.STRING); }
+<YYINITIAL> "int"  {System.out.println("Token: " + yytext() + " | Tipo: INT"); return symbol(ParserSym.INT); }
+<YYINITIAL> "String"  {System.out.println("Token: " + yytext() + " | Tipo: STRING"); return symbol(ParserSym.STRING); }
 <YYINITIAL> "Leer"  {return symbol(ParserSym.READ); }
 <YYINITIAL> "escribir"  {return symbol(ParserSym.WRITE); }
 <YYINITIAL> "public" { System.out.println("Token: " + yytext() + " | Tipo: PUBLIC");return symbol(ParserSym.PUBLIC); }
@@ -126,6 +126,7 @@ Comment = "/*"([^\r\n]|"\r"? "\n")*"*/"
   
   {Op_men}                            		{ System.out.println("Token: " + yytext() + " | Tipo: OP_MEN"); return symbol(ParserSym.OP_MEN, yytext()); }
   {Op_may}                            		{ System.out.println("Token: " + yytext() + " | Tipo: OP_MAY"); return symbol(ParserSym.OP_MAY, yytext()); }  
+  {Semicolon}                            	{ System.out.println("Token: " + yytext() + " | Tipo: PYC"); return symbol(ParserSym.PYC, yytext()); } 
   
 }
 
