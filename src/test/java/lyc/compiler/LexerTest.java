@@ -26,7 +26,7 @@ public class LexerTest {
 
   @Test
   public void comment() throws Exception{
-    scan("/*This is a ccascascac34234234omment*/");
+    scan("*-This is a ccascascac34234234omment-*");
     assertThat(nextToken()).isEqualTo(ParserSym.EOF);
     System.out.println("---------------------------Este es el resultado del test Comment");
   }

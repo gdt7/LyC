@@ -3,15 +3,19 @@ package lyc.compiler;
 import java_cup.runtime.*;
 import java.util.HashMap;
 import java.util.Map;
+import lyc.compiler.model.SymbolTableStruct;
+import java.util.ArrayList;
+import java.util.List;
 
 class Parser;
 
 action code {:
-	Object currIdent,currentValue;
+	Object currIdent,currentValue,currentDataType,currentLong;
 :}
 parser code
 {:
 	public Map<Object,Object> table = new HashMap();
+	public List<SymbolTableStruct> symbolList = new ArrayList();
 :};
 
 
@@ -106,9 +110,13 @@ asignacion
     	System.out.println("Currident: " + currIdent.toString());
     	System.out.println("Asignación de tipo entero: " + " = "); 
     	table.put(currIdent,currentValue);
+    	SymbolTableStruct symbol = new SymbolTableStruct(currIdent,"Int",currentValue,0);
+    	symbolList.add(symbol);
     	:}
     | ID:ident OP_ASIG expresion:expr PYC
     {: 
+    	SymbolTableStruct symbol = new SymbolTableStruct(currIdent,"Int",currentValue,0);
+    	symbolList.add(symbol);
     	System.out.println("Asignación: " + " = "); 
     :}
     
@@ -180,12 +188,14 @@ factor
     ::= ID:value 
     {:	
     	currentValue = value;
+    	currentLong = value.toString().length();
     	System.out.println("Factor identificador: " ); 
     :}
     | CONST_ENT:value 
     {: 
     	System.out.println("Factor constante entera: " ); 
     	currentValue = value;
+    	
     :}
     | PAR_A expresion PAR_C
     {: System.out.println("Factor expresión entre paréntesis: "); :}

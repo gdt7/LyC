@@ -56,7 +56,7 @@ Identifier = {Letter} ({Letter}|{Digit})*
 IntegerConstant = [-]?{Digit}+
 StringConstant = {DoubleQuote}({Letter}|{Digit}|{WhiteSpace})+{DoubleQuote}
 
-Comment = "*-"([^\r\n]|"\r"? "\n")*"-*/"
+Comment = "*-"([^\r\n]|"\r"? "\n")*"-*"
 %%
 
 
