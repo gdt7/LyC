@@ -1,9 +1,28 @@
 *-soy un comentario-*
-public class MiClase {
-    public static void main(String[] args) {
-        int c := 45;
-        int b := 90;
-        int a := b;
-    }
+init {
+    a1, b1 : Float
+    variable1 : Int
+    p1, p2, p3 : String
 }
 
+a := 99999.99
+a := 99.
+a := .9999
+
+b := "@sdADaSjfla%dfg"
+b := "asldk  fh sjf"
+
+si (a > b)
+{
+    escribir("a es mas grande que b")
+}
+sino
+{
+    escribir("a es mas chico o igual a b")
+}
+
+mientras (a > b)
+{
+    escribir("a es mas grande que b")
+    a := a + 1
+}

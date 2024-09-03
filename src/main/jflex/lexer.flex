@@ -45,40 +45,37 @@ CloseCurly = "}"
 Semicolon = ";"
 Op_men = "<"
 Op_may = ">"
-OpenSquareBracket = "["
-CloseSquareBracket = "]"
+Coma = ","
+DosPuntos = ":"
 
 Letter = [a-zA-Z]
 Digit = [0-9]
 DoubleQuote = "\""
+Arroba = "@"
+Percent = "%"
 WhiteSpace = {LineTerminator} | {Identation}
 Identifier = {Letter} ({Letter}|{Digit})*
 IntegerConstant = [-]?{Digit}+
-StringConstant = {DoubleQuote}({Letter}|{Digit}|{WhiteSpace})+{DoubleQuote}
-
+StringConstant = {DoubleQuote}({Letter}|{Digit}|{WhiteSpace}|{Arroba}|{Percent})+{DoubleQuote}
+FloatConstants = {Digit}+[.]{Digit}+ | [.]{Digit}+ | {Digit}+[.]
 Comment = "*-"([^\r\n]|"\r"? "\n")*"-*"
 %%
 
 
 /* keywords */
 /*while*/
-<YYINITIAL> "mientras"  {System.out.println("Token: " + yytext() + " | Tipo: MIENTRAS"); return symbol(ParserSym.WHILE); }
-<YYINITIAL> "si"  {return symbol(ParserSym.IF); }
-<YYINITIAL> "sino"  {return symbol(ParserSym.ELSE); }
-<YYINITIAL> "init"  {return symbol(ParserSym.INIT); }
-<YYINITIAL> "AND"  {return symbol(ParserSym.AND); }
-<YYINITIAL> "OR"  {return symbol(ParserSym.OR); }
-<YYINITIAL> "NOT"  {return symbol(ParserSym.NOT); }
-<YYINITIAL> "Float"  {return symbol(ParserSym.FLOAT); }
-<YYINITIAL> "int"  {System.out.println("Token: " + yytext() + " | Tipo: INT"); return symbol(ParserSym.INT); }
-<YYINITIAL> "String"  {System.out.println("Token: " + yytext() + " | Tipo: STRING"); return symbol(ParserSym.STRING); }
-<YYINITIAL> "Leer"  {return symbol(ParserSym.READ); }
-<YYINITIAL> "escribir"  {return symbol(ParserSym.WRITE); }
-<YYINITIAL> "public" { System.out.println("Token: " + yytext() + " | Tipo: PUBLIC");return symbol(ParserSym.PUBLIC); }
-<YYINITIAL> "class" { System.out.println("Token: " + yytext() + " | Tipo: CLASS");return symbol(ParserSym.CLASS); }
-<YYINITIAL> "static" { System.out.println("Token: " + yytext() + " | Tipo: STATIC");return symbol(ParserSym.STATIC); }
-<YYINITIAL> "void" { System.out.println("Token: " + yytext() + " | Tipo: VOID");return symbol(ParserSym.VOID); }
-<YYINITIAL> "main" { System.out.println("Token: " + yytext() + " | Tipo: MAIN");return symbol(ParserSym.MAIN); }
+<YYINITIAL> "mientras"  {System.out.println("Token: " + yytext() + " | Tipo: MIENTRAS"); return symbol(ParserSym.MIENTRAS); }
+<YYINITIAL> "si"  		{System.out.println("Token: " + yytext() + " | Tipo: SI"); return symbol(ParserSym.SI); }
+<YYINITIAL> "sino"  	{System.out.println("Token: " + yytext() + " | Tipo: SINO");return symbol(ParserSym.SINO); }
+<YYINITIAL> "init"  	{System.out.println("Token: " + yytext() + " | Tipo: INIT"); return symbol(ParserSym.INIT); }
+<YYINITIAL> "AND"  		{System.out.println("Token: " + yytext() + " | Tipo: AND"); return symbol(ParserSym.AND); }
+<YYINITIAL> "OR"  		{System.out.println("Token: " + yytext() + " | Tipo: OR"); return symbol(ParserSym.OR); }
+<YYINITIAL> "NOT"  		{System.out.println("Token: " + yytext() + " | Tipo: NOT"); return symbol(ParserSym.NOT); }
+<YYINITIAL> "Float"  	{System.out.println("Token: " + yytext() + " | Tipo: FLOAT"); return symbol(ParserSym.FLOAT); }
+<YYINITIAL> "Int"  		{System.out.println("Token: " + yytext() + " | Tipo: INT"); return symbol(ParserSym.INT); }
+<YYINITIAL> "String"  	{System.out.println("Token: " + yytext() + " | Tipo: STRING"); return symbol(ParserSym.STRING); }
+<YYINITIAL> "leer" 		{System.out.println("Token: " + yytext() + " | Tipo: READ"); return symbol(ParserSym.READ); }
+<YYINITIAL> "escribir"  {System.out.println("Token: " + yytext() + " | Tipo: WRITE"); return symbol(ParserSym.WRITE); }
 
 
 <YYINITIAL> {
@@ -101,12 +98,17 @@ Comment = "*-"([^\r\n]|"\r"? "\n")*"-*"
 												  System.out.println("Token: " + yytext() + " | Tipo: CONST_ENT");
 												  return symbol(ParserSym.CONST_ENT, yytext());
 											}
+											
+  {FloatConstants}                         {
+												  System.out.println("Token: " + yytext() + " | Tipo: CONST_FLT");
+												  return symbol(ParserSym.CONST_FLT, yytext());
+											}
   {StringConstant} 							{    
 												if (yytext().length() > 50) {
 													throw new InvalidLengthException("String constant too long: " + yytext());
 												  }
-												  System.out.println("Token: " + yytext() + " | Tipo: CONST_ENT");
-												  return symbol(ParserSym.STRING_CONSTANT, yytext());
+												  System.out.println("Token: " + yytext() + " | Tipo: CONST_STR");
+												  return symbol(ParserSym.CONST_STR, yytext());
 											}
   /* operators */
   {Plus}                                    { System.out.println("Token: " + yytext() + " | Tipo: OP_MAS"); return symbol(ParserSym.OP_MAS, yytext()); }
@@ -118,8 +120,7 @@ Comment = "*-"([^\r\n]|"\r"? "\n")*"-*"
   {CloseBracket}                            { System.out.println("Token: " + yytext() + " | Tipo: PAR_C"); return symbol(ParserSym.PAR_C, yytext()); }
   {OpenCurly}                             	{ System.out.println("Token: " + yytext() + " | Tipo: LLAVE_A"); return symbol(ParserSym.LLAVE_A, yytext()); }
   {CloseCurly}                            	{  System.out.println("Token: " + yytext() + " | Tipo: LLAVE_C"); return symbol(ParserSym.LLAVE_C, yytext());}
-  {OpenSquareBracket}   					{ System.out.println("Token: " + yytext() + " | Tipo: OPEN_SQUARE"); return symbol(ParserSym.OPEN_SQUARE, yytext()); }
-  {CloseSquareBracket}  					{ System.out.println("Token: " + yytext() + " | Tipo: CLOSE_SQUARE"); return symbol(ParserSym.CLOSE_SQUARE, yytext()); }
+
   /* whitespace */
   {WhiteSpace}                   { /* ignore */ }
   {Comment} 				     { /* ignore */ }
@@ -127,6 +128,8 @@ Comment = "*-"([^\r\n]|"\r"? "\n")*"-*"
   {Op_men}                            		{ System.out.println("Token: " + yytext() + " | Tipo: OP_MEN"); return symbol(ParserSym.OP_MEN, yytext()); }
   {Op_may}                            		{ System.out.println("Token: " + yytext() + " | Tipo: OP_MAY"); return symbol(ParserSym.OP_MAY, yytext()); }  
   {Semicolon}                            	{ System.out.println("Token: " + yytext() + " | Tipo: PYC"); return symbol(ParserSym.PYC, yytext()); } 
+  {Coma}                            	{ System.out.println("Token: " + yytext() + " | Tipo: COMA"); return symbol(ParserSym.COMA, yytext()); } 
+  {DosPuntos}                            	{ System.out.println("Token: " + yytext() + " | Tipo: DOS_PUNTOS"); return symbol(ParserSym.DOS_PUNTOS, yytext()); } 
   
 }
 

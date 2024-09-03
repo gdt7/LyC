@@ -15,11 +15,12 @@ import static com.google.common.truth.Truth.assertThat;
 import static lyc.compiler.Constants.EXAMPLES_ROOT_DIRECTORY;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+//@Disabled
 public class ParserTest {
 
     @Test
     public void assignmentWithExpression() throws Exception {
-        compilationSuccessful("c=d*(e-21)/4");
+        compilationSuccessful("c:=d*(e - 21)/4");
     }
 
     @Test
@@ -90,11 +91,18 @@ public class ParserTest {
         return ParserFactory.create(input).parse();
     }
 
-    private String readFromFile(String fileName) throws IOException {
+    /*private String readFromFile(String fileName) throws IOException {
         URL url = new URL(EXAMPLES_ROOT_DIRECTORY + "/%s".formatted(fileName));
         assertThat(url).isNotNull();
         return IOUtils.toString(url.openStream(), StandardCharsets.UTF_8);
+    }*/
+
+    private String readFromFile(String fileName) throws IOException {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
+        assertThat(inputStream).isNotNull();
+        return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
     }
+    
 
 
 }
