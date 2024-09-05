@@ -53,7 +53,10 @@ terminal INIT;
 terminal NOT;
 terminal DOS_PUNTOS;
 terminal COMA;
-
+terminal COR_A;
+terminal COR_C;
+terminal GETPENULTIMATEPOSITION;
+terminal TRIANGULO;
 
 // Non Terminals
 non terminal ss;
@@ -72,6 +75,8 @@ non terminal condicion;
 non terminal comparacion;
 non terminal comparador;
 non terminal expresion;
+non terminal funcion;
+non terminal listaconst;
 non terminal termino;
 non terminal factor;
 
@@ -210,7 +215,25 @@ expresion
 		{: System.out.println("Expresión resta: "); :}
     | termino
 		{: System.out.println("Expresión simple: "); :}
+	| funcion
+		{: System.out.println("Expresion es Funcion especial: "); :}
     ;
+	
+funcion
+	 ::= GETPENULTIMATEPOSITION PAR_A COR_A listaconst COR_C PAR_C
+		{: System.out.println("Expresión suma: "); :}
+	;
+
+listaconst
+	 ::= listaconst COMA CONST_ENT
+		{: System.out.println("Componente de lista: Constante entera "); :}
+	|	listaconst COMA CONST_FLT
+		{: System.out.println("Componente de lista: Constante flotante "); :}
+	|	 CONST_FLT
+		{: System.out.println("Constante entera: "); :}
+	|	 CONST_ENT
+		{: System.out.println("Constante entera: "); :}
+	;
 
 termino 
     ::= termino OP_MULT factor 

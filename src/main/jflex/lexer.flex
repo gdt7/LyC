@@ -42,6 +42,8 @@ OpenBracket = "("
 CloseBracket = ")"
 OpenCurly = "{"
 CloseCurly = "}"
+CorcheteAbre = "["
+CorcheteCierra = "]"
 Semicolon = ";"
 Op_men = "<"
 Op_may = ">"
@@ -76,6 +78,8 @@ Comment = "*-"([^\r\n]|"\r"? "\n")*"-*"
 <YYINITIAL> "String"  	{System.out.println("Token: " + yytext() + " | Tipo: STRING"); return symbol(ParserSym.STRING); }
 <YYINITIAL> "leer" 		{System.out.println("Token: " + yytext() + " | Tipo: READ"); return symbol(ParserSym.READ); }
 <YYINITIAL> "escribir"  {System.out.println("Token: " + yytext() + " | Tipo: WRITE"); return symbol(ParserSym.WRITE); }
+<YYINITIAL> "getPenultimatePosition"  {System.out.println("Token: " + yytext() + " | Tipo: GETPENULTIMATEPOSITION"); return symbol(ParserSym.GETPENULTIMATEPOSITION); }
+<YYINITIAL> "triangulo"  {System.out.println("Token: " + yytext() + " | Tipo: TRIANGULO"); return symbol(ParserSym.TRIANGULO); }
 
 
 <YYINITIAL> {
@@ -120,6 +124,8 @@ Comment = "*-"([^\r\n]|"\r"? "\n")*"-*"
   {CloseBracket}                            { System.out.println("Token: " + yytext() + " | Tipo: PAR_C"); return symbol(ParserSym.PAR_C, yytext()); }
   {OpenCurly}                             	{ System.out.println("Token: " + yytext() + " | Tipo: LLAVE_A"); return symbol(ParserSym.LLAVE_A, yytext()); }
   {CloseCurly}                            	{  System.out.println("Token: " + yytext() + " | Tipo: LLAVE_C"); return symbol(ParserSym.LLAVE_C, yytext());}
+  {CorcheteAbre}                            {  System.out.println("Token: " + yytext() + " | Tipo: COR_A"); return symbol(ParserSym.COR_A, yytext());}
+  {CorcheteCierra}                          {  System.out.println("Token: " + yytext() + " | Tipo: COR_C"); return symbol(ParserSym.COR_C, yytext());}
 
   /* whitespace */
   {WhiteSpace}                   { /* ignore */ }
