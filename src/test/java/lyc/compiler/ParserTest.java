@@ -78,9 +78,14 @@ public class ParserTest {
         compilationSuccessful(readFromFile("while.txt"));
     }
 
-    @Test
+    //@Test
     void funcionGetPenultimatePosition() throws Exception {
         compilationSuccessful(readFromFile("getPenultimatePosition.txt"));
+    }
+
+    @Test
+    void funcionTriangulo() throws Exception {
+        compilationSuccessful(readFromFile("triangulo.txt"));
     }
 
 

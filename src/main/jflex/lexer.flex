@@ -61,6 +61,8 @@ IntegerConstant = [-]?{Digit}+
 StringConstant = {DoubleQuote}({Letter}|{Digit}|{WhiteSpace}|{Arroba}|{Percent})+{DoubleQuote}
 FloatConstants = {Digit}+[.]{Digit}+ | [.]{Digit}+ | {Digit}+[.]
 Comment = "*-"([^\r\n]|"\r"? "\n")*"-*"
+SingleLineComment = "//"{InputCharacter}*
+
 %%
 
 
@@ -130,7 +132,7 @@ Comment = "*-"([^\r\n]|"\r"? "\n")*"-*"
   /* whitespace */
   {WhiteSpace}                   { /* ignore */ }
   {Comment} 				     { /* ignore */ }
-  
+  {SingleLineComment}            { /* ignore single line comment */ }
   {Op_men}                            		{ System.out.println("Token: " + yytext() + " | Tipo: OP_MEN"); return symbol(ParserSym.OP_MEN, yytext()); }
   {Op_may}                            		{ System.out.println("Token: " + yytext() + " | Tipo: OP_MAY"); return symbol(ParserSym.OP_MAY, yytext()); }  
   {Semicolon}                            	{ System.out.println("Token: " + yytext() + " | Tipo: PYC"); return symbol(ParserSym.PYC, yytext()); } 

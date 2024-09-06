@@ -221,7 +221,9 @@ expresion
 	
 funcion
 	 ::= GETPENULTIMATEPOSITION PAR_A COR_A listaconst COR_C PAR_C
-		{: System.out.println("Expresión suma: "); :}
+		{: System.out.println("Funcion especial : "); :}
+	| 	TRIANGULO PAR_A expresion COMA expresion COMA expresion PAR_C
+		{: System.out.println("Funcion especial: "); :}
 	;
 
 listaconst
@@ -235,6 +237,7 @@ listaconst
 		{: System.out.println("Constante entera: "); :}
 	;
 
+	
 termino 
     ::= termino OP_MULT factor 
 		{: System.out.println("Término multiplicación: "); :}
