@@ -1,82 +1,123 @@
 package lyc.compiler;
 
-import java_cup.runtime.Symbol;
-import lyc.compiler.factories.ParserFactory;
-import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import static com.google.common.truth.Truth.assertThat;
-import static lyc.compiler.Constants.EXAMPLES_ROOT_DIRECTORY;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.Test;
+
+import java_cup.runtime.Symbol;
+import lyc.compiler.factories.ParserFactory;
 
 //@Disabled
 public class ParserTest {
 
     //@Test
     public void assignmentWithExpression() throws Exception {
-        compilationSuccessful("c:=d*(e - 21)/4");
+    	System.out.println("---------------------------Inicio test: assignmentWithExpression");
+    	Parser parser = createParser("c:=d*(e - 21)/4");
+    	compilationSuccessful(parser);
+//    	assertAll(
+////    			() -> assertEquals(parser.symbolList.get(0).getNombre(),"c")
+//    			);
+        System.out.println("---------------------------Fin test: assignmentWithExpression");
     }
 
     //@Test
     public void syntaxError() {
-        compilationError("1234");
+    	System.out.println("---------------------------Inicio test: syntaxError");
+    	Parser parser = createParser("1234");
+        compilationError(parser);
+        System.out.println("---------------------------Fin test: syntaxError");
     }
 
     //@Test
     void assignments() throws Exception {
-        compilationSuccessful(readFromFile("assignments.txt"));
+    	System.out.println("---------------------------Inicio test: assignments");
+    	Parser parser = createParser(readFromFile("assignments.txt"));
+    	compilationSuccessful(parser);
+        System.out.println("---------------------------Fin test: assignments");
     }
 
     //@Test
     void write() throws Exception {
-        compilationSuccessful(readFromFile("write.txt"));
+    	System.out.println("---------------------------Inicio test: write");
+    	Parser parser = createParser(readFromFile("write.txt"));
+    	compilationSuccessful(parser);
+        System.out.println("---------------------------Fin test: write");
+        
     }
 
     //@Test
     void read() throws Exception {
-        compilationSuccessful(readFromFile("read.txt"));
+    	System.out.println("---------------------------Inicio test: read");
+    	Parser parser = createParser(readFromFile("read.txt"));
+    	compilationSuccessful(parser);
+        System.out.println("---------------------------Fin test: read");
     }
 
     //@Test
     void comment() throws Exception {
-        compilationSuccessful(readFromFile("comment.txt"));
+    	System.out.println("---------------------------Inicio test: comment");
+    	Parser parser = createParser(readFromFile("comment.txt"));
+    	compilationSuccessful(parser);
+        System.out.println("---------------------------Fin test: comment");
     }
 
     //@Test
     void init() throws Exception {
-        compilationSuccessful(readFromFile("init.txt"));
+    	System.out.println("---------------------------Inicio test: init");
+    	Parser parser = createParser(readFromFile("init.txt"));
+    	compilationSuccessful(parser);
+        System.out.println("---------------------------Fin test: init");
     }
 
     //@Test
     void and() throws Exception {
-        compilationSuccessful(readFromFile("and.txt"));
+    	System.out.println("---------------------------Inicio test: and");
+    	Parser parser = createParser(readFromFile("and.txt"));
+    	compilationSuccessful(parser);
+        System.out.println("---------------------------Fin test: and");
     }
 
     //@Test
     void or() throws Exception {
-        compilationSuccessful(readFromFile("or.txt"));
+    	System.out.println("---------------------------Inicio test: or");
+    	Parser parser = createParser(readFromFile("or.txt"));
+    	compilationSuccessful(parser);
+        System.out.println("---------------------------Fin test: or");
     }
 
     //@Test
     void not() throws Exception {
-        compilationSuccessful(readFromFile("not.txt"));
+    	System.out.println("---------------------------Inicio test: not");
+    	Parser parser = createParser(readFromFile("not.txt"));
+    	compilationSuccessful(parser);
+        System.out.println("---------------------------Fin test: not");
     }
 
     //@Test
     void ifStatement() throws Exception {
-        compilationSuccessful(readFromFile("if.txt"));
+    	System.out.println("---------------------------Inicio test: ifStatement");
+    	Parser parser = createParser(readFromFile("if.txt"));
+    	compilationSuccessful(parser);
+        System.out.println("---------------------------Fin test: ifStatement");
     }
 
     //@Test
     void whileStatement() throws Exception {
-        compilationSuccessful(readFromFile("while.txt"));
+    	System.out.println("---------------------------Inicio test: whileStatement");
+    	Parser parser = createParser(readFromFile("while.txt"));
+    	compilationSuccessful(parser);
+        System.out.println("---------------------------Fin test: whileStatement");
     }
+
 
     //@Test
     void funcionGetPenultimatePosition() throws Exception {
@@ -88,15 +129,28 @@ public class ParserTest {
         compilationSuccessful(readFromFile("triangulo.txt"));
     }
 
-
     private void compilationSuccessful(String input) throws Exception {
         assertThat(scan(input).sym).isEqualTo(ParserSym.EOF);
     }
-
+    
+    private void compilationSuccessful(Parser parser) throws Exception { 	
+    	assertThat(parser.parse().sym).isEqualTo(ParserSym.EOF); 
+    }
+    
+    
+    private void compilationError(Parser parser){
+        assertThrows(Exception.class, () -> parser.parse());
+    }
+    
     private void compilationError(String input){
         assertThrows(Exception.class, () -> scan(input));
     }
-
+    
+    
+    private static Parser createParser(String input) {
+    	return ParserFactory.create(input);
+    }
+    
     private Symbol scan(String input) throws Exception {
         return ParserFactory.create(input).parse();
     }

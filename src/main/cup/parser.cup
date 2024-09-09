@@ -1,21 +1,16 @@
 package lyc.compiler;
 
 import java_cup.runtime.*;
-import java.util.HashMap;
-import java.util.Map;
 import lyc.compiler.model.SymbolTableStruct;
 import java.util.ArrayList;
 import java.util.List;
 
 class Parser;
 
-action code {:
-	Object currIdent,currentValue,currentDataType,currentLong;
-:}
 parser code
 {:
-	public Map<Object,Object> table = new HashMap();
-	public List<SymbolTableStruct> symbolList = new ArrayList();
+	//SymbolTableStruct currentSymbol;
+	//public List<SymbolTableStruct> symbolList = new ArrayList();
 :};
 
 // Terminals
@@ -105,7 +100,10 @@ listadec
 	::= listadec sentdec
 		{: System.out.println("Lista de sentencia de declaracion de variables: "); :}
 	| sentdec 
-		{: System.out.println("Sentencia unica de declaracion de variables: "); :}
+		{: 
+			System.out.println("Sentencia unica de declaracion de variables: "); 
+			//symbolList.add(currentSymbol);	
+		:}
     ;
 
 sentdec
@@ -114,14 +112,16 @@ sentdec
 	| 	listaid DOS_PUNTOS FLOAT
 		{: 	System.out.println("Lista de variables flotantes: "); :}
 	| 	listaid DOS_PUNTOS STRING
-		{: 	System.out.println("Lista de variables strings: "); :}
+		{: 	
+			System.out.println("Lista de variables strings: ");
+		:}
+		
     ;
 	
 listaid
 	::= listaid COMA ID
 		{: 	System.out.println("Lista de IDs: "); :}
-	| 	ID
-		{: 	System.out.println("Unico ID: "); :}
+	| 	ID:ident
 	;
 	 
 programa 
@@ -248,14 +248,26 @@ termino
     ;
 
 factor 
-    ::= ID 
-		{: System.out.println("Factor ID: " ); :}
-    | CONST_ENT 
-		{: System.out.println("Factor constante entera: " ); :}
-	| CONST_FLT 
-		{: System.out.println("Factor constante flotante: " ); :}
-	| CONST_STR
-		{: System.out.println("Factor constante string: " ); :}
+    ::= ID:value 
+		{: 
+			System.out.println("Factor ID: " ); 
+			//currentSymbol = new SymbolTableStruct(null,null,null,0);
+		:}
+    | CONST_ENT:value 
+		{: 
+			System.out.println("Factor constante entera: " ); 
+			//symbolList.add(new SymbolTableStruct("_".concat(value.toString()),"Int",value,0));
+		:}
+	| CONST_FLT:value 
+		{: 
+			System.out.println("Factor constante flotante: " ); 
+			//symbolList.add(new SymbolTableStruct("_".concat(value.toString()),"Float",value,0));
+		:}
+	| CONST_STR:value
+		{: 
+			System.out.println("Factor constante string: " ); 
+			//symbolList.add(new SymbolTableStruct("_".concat(value.toString()),"String",value,value.toString().length()));
+		:}
     | PAR_A expresion PAR_C
 		{: System.out.println("Factor expresión entre paréntesis: "); :}
     ;

@@ -1,7 +1,9 @@
 package lyc.compiler.main;
 
+import lyc.compiler.Lexer;
 import lyc.compiler.Parser;
 import lyc.compiler.factories.FileFactory;
+import lyc.compiler.factories.LexerFactory;
 import lyc.compiler.factories.ParserFactory;
 import lyc.compiler.files.FileOutputWriter;
 import lyc.compiler.files.SymbolTableGenerator;
@@ -20,9 +22,10 @@ public final class Compiler {
         }
 
         try (Reader reader = FileFactory.create(args[0])) {
-            Parser parser = ParserFactory.create(reader);
+        	Lexer lexer = LexerFactory.create(reader);
+        	Parser parser = ParserFactory.create(lexer);
             parser.parse();
-            FileOutputWriter.writeOutput("symbol-table.txt", new SymbolTableGenerator(parser));
+            FileOutputWriter.writeOutput("symbol-table.txt", new SymbolTableGenerator(lexer));
             //FileOutputWriter.writeOutput("intermediate-code.txt", new SymbolTableGenerator());
            // FileOutputWriter.writeOutput("final.asm", new SymbolTableGenerator());
         } catch (IOException e) {

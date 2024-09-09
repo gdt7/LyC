@@ -18,7 +18,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static lyc.compiler.constants.Constants.MAX_LENGTH;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Disabled
+//@Disabled
 public class LexerTest {
 
   private Lexer lexer;
@@ -29,6 +29,16 @@ public class LexerTest {
     scan("*-This is a ccascascac34234234omment-*");
     assertThat(nextToken()).isEqualTo(ParserSym.EOF);
     System.out.println("---------------------------Este es el resultado del test Comment");
+  }
+  
+  @Test
+  public void commentWithCode() throws Exception{
+    scan("*- Ejemplo de variable que excede el limite de caracteres -*\n"
+    		+ "*- z := \"asdasdasdasdasdasdasdwrqwqrwqrqwr121525125125125sasfsafasfasrf124421125125\" -*");
+    assertThat(nextToken()).isEqualTo(ParserSym.EOF);
+    
+    
+    System.out.println("---------------------------Este es el resultado del test commentWithCode");
   }
 
   @Test
@@ -144,6 +154,7 @@ public class LexerTest {
 	  assertThat(nextToken()).isEqualTo(ParserSym.CONST_STR);
 	  assertThat(nextToken()).isEqualTo(ParserSym.PAR_C);
 	  assertThat(nextToken()).isEqualTo(ParserSym.LLAVE_C);
+	  SymbolTableGeneratorForTesting.generateTable(lexer);
     System.out.println("---------------------------Este es el resultado del test ifElseImpl");
 
   }

@@ -1,6 +1,7 @@
 package lyc.compiler.factories;
 
 import lyc.compiler.Parser;
+import lyc.compiler.Lexer;
 
 import java.io.Reader;
 
@@ -8,6 +9,10 @@ public final class ParserFactory {
 
     private ParserFactory(){}
 
+    public static Parser create(Lexer lexer) {
+    	return new Parser(lexer);
+    }
+    
     public static Parser create(String input) {
         return new Parser(LexerFactory.create(input));
     }

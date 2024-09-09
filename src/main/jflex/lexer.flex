@@ -3,6 +3,9 @@ package lyc.compiler;
 import java_cup.runtime.Symbol;
 import lyc.compiler.ParserSym;
 import lyc.compiler.model.*;
+import lyc.compiler.model.SymbolTableStruct;
+import java.util.ArrayList;
+import java.util.List;
 import static lyc.compiler.constants.Constants.*;
 
 %%
@@ -26,12 +29,24 @@ import static lyc.compiler.constants.Constants.*;
   private Symbol symbol(int type, Object value) {
     return new Symbol(type, yyline, yycolumn, value);
   }
+  
+  public SymbolTableStruct currentSymbol;
+  public List<SymbolTableStruct> symbolList = new ArrayList();
+  
+  
+  private void addToSymbolListIfNotExists(SymbolTableStruct symbol){
+  		if(!symbolList.contains(symbol))
+  			symbolList.add(symbol);
+  }
+	
 %}
 
 
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
 Identation =  [ \t\f]
+
+Comment = \*-([^\r?\n])*?-\*
 
 Plus = "+"
 Mult = "*"
@@ -60,7 +75,7 @@ Identifier = {Letter} ({Letter}|{Digit})*
 IntegerConstant = [-]?{Digit}+
 StringConstant = {DoubleQuote}({Letter}|{Digit}|{WhiteSpace}|{Arroba}|{Percent})+{DoubleQuote}
 FloatConstants = {Digit}+[.]{Digit}+ | [.]{Digit}+ | {Digit}+[.]
-Comment = "*-"([^\r\n]|"\r"? "\n")*"-*"
+
 SingleLineComment = "//"{InputCharacter}*
 
 %%
@@ -90,8 +105,9 @@ SingleLineComment = "//"{InputCharacter}*
 												
 												if (yytext().length() > 50) {
 													throw new InvalidLengthException("Identifier too long: " + yytext());
-												  }
-												  System.out.println("Token: " + yytext() + " | Tipo: ID"); 
+												  }												  
+												  System.out.println("Token: " + yytext() + " | Tipo: ID");
+												  addToSymbolListIfNotExists(new SymbolTableStruct("_".concat(yytext()),null,null,0));  
 												  return symbol(ParserSym.ID, yytext()); 
 											}
   /* Constants */
@@ -102,11 +118,13 @@ SingleLineComment = "//"{InputCharacter}*
 													throw new InvalidIntegerException("Invalid integer constant: " + yytext());
 												  }
 												  System.out.println("Token: " + yytext() + " | Tipo: CONST_ENT");
+												  addToSymbolListIfNotExists(new SymbolTableStruct("_".concat(yytext()),"Int",yytext(),0));
 												  return symbol(ParserSym.CONST_ENT, yytext());
 											}
 											
   {FloatConstants}                         {
 												  System.out.println("Token: " + yytext() + " | Tipo: CONST_FLT");
+												  addToSymbolListIfNotExists(new SymbolTableStruct("_".concat(yytext()),"Float",yytext(),0));
 												  return symbol(ParserSym.CONST_FLT, yytext());
 											}
   {StringConstant} 							{    
@@ -114,6 +132,7 @@ SingleLineComment = "//"{InputCharacter}*
 													throw new InvalidLengthException("String constant too long: " + yytext());
 												  }
 												  System.out.println("Token: " + yytext() + " | Tipo: CONST_STR");
+												  addToSymbolListIfNotExists(new SymbolTableStruct("_".concat(yytext()),"String",yytext(),yytext().length()));  
 												  return symbol(ParserSym.CONST_STR, yytext());
 											}
   /* operators */

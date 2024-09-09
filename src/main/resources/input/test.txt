@@ -1,9 +1,12 @@
-*-soy un comentario-*
+*- soy un comentario -*
+
 init {
     a1, b1 : Float
-    variable1 : Int
-    p1, p2, p3 : String
+    variable1,x, z: Int
+    p1, p2, p3, z : String
 }
+
+
 
 a := 99999.99
 a := 99.
@@ -11,6 +14,9 @@ a := .9999
 
 b := "@sdADaSjfla%dfg"
 b := "asldk  fh sjf"
+
+
+x := 2
 
 si (a > b)
 {
@@ -26,3 +32,19 @@ mientras (a > b)
     escribir("a es mas grande que b")
     a := a + 1
 }
+
+tri := triangulo(3,a,b)
+
+tri2 := triangulo(3/x,z+4,b*26)
+
+x := getPenultimatePosition([3, 8.2, 2, 55.5])
+
+*- Ejemplo de variable que excede el limite de caracteres -*
+*- z := "asdasdasdasdasdasdasdwrqwqrwqrqwr121525125125125sasfsafasfasrf124421125125" -*
+
+*- Ejemplo de funcion triangulo con error -*
+*- tri3 := triangulo(3/x,z+4,b*26,b) -*
+
+*- Ejemplo de funcion getPenultimatePosition con error -*
+*- x := getPenultimatePosition([3, 8.2, 2, 55.5) -*
+*- x := getPenultimatePosition([3, 8.2, 2, 55.5,b]) -*
