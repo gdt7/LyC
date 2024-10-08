@@ -7,17 +7,58 @@ init {
 }
 
 
+*- validación de cotas flotantes -*
+*- a := 99999999999.99 -*
 
-a := 99999.99
+*- validación de cotas enteros -*
+*- a := 99999999999999999 -*
+
+a := 9999.99
 a := 99.
 a := .9999
 
+*- validación de longitud strings -*
+*- b := "asdaadadasdadasdadasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd" -*
 b := "@sdADaSjfla%dfg"
 b := "asldk  fh sjf"
 
+*- error carácter invalido -*
+*- c := ʉ -*
 
 x := 2
 
+
+*- condicion compuesta AND -*
+
+si ( a > b  AND  c > d )
+{
+    escribir("a es mas grande que b")
+    escribir("c es mas grande que d")
+}
+sino
+{
+    escribir("a es mas chico o igual a b")
+    escribir("c es mas chico o igual a d")
+}
+
+
+*- condicion compuesta OR -*
+
+si ( a > b  OR  c > d OR  e > f)
+{
+    escribir("a es mas grande que b o")
+    escribir("c es mas grande que d o") 
+    escribir("e es mas grande que f")
+}
+sino
+{
+    escribir("a es mas chico o igual a b o")
+    escribir("c es mas chico o igual a d o")
+    escribir("e es mas chico o igual a f")
+}
+
+
+*- condicion simple -*
 si (a > b)
 {
     escribir("a es mas grande que b")
@@ -26,6 +67,25 @@ sino
 {
     escribir("a es mas chico o igual a b")
 }
+
+
+*- condicion if anidado y sentencia leer-*
+
+si (a > b)
+{
+     si (c > d)
+	{
+    	    escribir("a es mas grande que b")
+	    escribir("c es mas grande que d")
+	}
+
+
+}
+sino
+{
+    leer(f)
+}
+
 
 mientras (a > b)
 {

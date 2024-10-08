@@ -112,7 +112,15 @@ SingleLineComment = "//"{InputCharacter}*
 											}
   /* Constants */
   {IntegerConstant}                         {							
-												try {
+													try {
+														long value = Long.parseLong(yytext()); // para evitar errores con números grandes antes de validarlos.
+														long lowerLimit = -12560000;
+														long upperLimit = 12560000;
+
+														// Verifica si el valor está dentro del rango personalizado
+														if (value < lowerLimit || value > upperLimit) {
+															throw new InvalidIntegerException("Integer constant out of bounds: " + yytext() + ". Allowed range: " + lowerLimit + " to " + upperLimit);
+														}
 													Integer.parseInt(yytext());
 												  } catch (NumberFormatException e) {
 													throw new InvalidIntegerException("Invalid integer constant: " + yytext());
@@ -123,9 +131,29 @@ SingleLineComment = "//"{InputCharacter}*
 											}
 											
   {FloatConstants}                         {
-												  System.out.println("Token: " + yytext() + " | Tipo: CONST_FLT");
-												  addToSymbolListIfNotExists(new SymbolTableStruct("_".concat(yytext()),"Float",yytext(),0));
-												  return symbol(ParserSym.CONST_FLT, yytext());
+														   try {
+													double value = Double.parseDouble(yytext());
+
+													// Define los límites de flotantes permitidos
+													double lowerLimit = -999999.99;
+													double upperLimit = 999999.99;
+
+													// Verifica si el valor está dentro del rango permitido
+													if (value < lowerLimit || value > upperLimit) {
+														throw new InvalidFloatException("Float constant out of bounds: " + yytext() + 
+																						 ". Allowed range: " + lowerLimit + " to " + upperLimit);
+													}
+
+													System.out.println("Token: " + yytext() + " | Tipo: CONST_FLT");
+													addToSymbolListIfNotExists(new SymbolTableStruct("_".concat(yytext()), "Float", yytext(), 0));
+													return symbol(ParserSym.CONST_FLT, yytext());
+
+												} catch (NumberFormatException e) {
+													throw new InvalidFloatException("Invalid float constant: " + yytext());
+												} catch (InvalidFloatException e) {
+													System.err.println(e.getMessage());
+													// Puedes lanzar la excepción o manejarla según sea necesario
+												}
 											}
   {StringConstant} 							{    
 												if (yytext().length() > 50) {
