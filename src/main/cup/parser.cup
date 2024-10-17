@@ -4,13 +4,41 @@ import java_cup.runtime.*;
 import lyc.compiler.model.SymbolTableStruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
+
 
 class Parser;
 
 parser code
 {:
-	//SymbolTableStruct currentSymbol;
-	//public List<SymbolTableStruct> symbolList = new ArrayList();
+	String myVal;
+  // Lista para almacenar el código intermedio
+  public List<String> intermediateCode = new ArrayList<>();
+   public Stack<String> stack = new Stack<>(); // La pila para almacenar IDs y valores
+
+  public List<String> getIntermediateCode() {
+    return intermediateCode;
+  }
+
+  public void polaca(String code) {
+    intermediateCode.add(code);
+  }
+  
+  public void apilar(String value) {
+    stack.push(value);
+    System.out.println("Valor agregado a la pila: " + value);
+  }
+
+  public String desapilar() {
+    if (!stack.isEmpty()) {
+      String value = stack.pop();
+      System.out.println("Valor retirado de la pila: " + value);
+      return value;
+    } else {
+      System.out.println("Pila vacía");
+      return null;
+    }
+  }
 :};
 
 // Terminals
@@ -119,9 +147,18 @@ sentdec
     ;
 	
 listaid
-	::= listaid COMA ID
-		{: 	System.out.println("Lista de IDs: "); :}
+	::= listaid COMA ID:ident
+		{: 	
+			String idValue = (String) ident;
+			polaca(idValue);
+			System.out.println("Lista de IDs: "); :}
 	| 	ID:ident
+		{: 	
+			String idValue = (String) ident;
+			polaca(idValue);
+			System.out.println("Lista de variables strings: ");
+		:}
+
 	;
 	 
 programa 
@@ -149,8 +186,11 @@ sentencia
     ;
 	
 entrada
-	::= READ PAR_A ID PAR_C
-		{: System.out.println("Sentencia de Entrada: "); :}
+	::= READ PAR_A ID:value PAR_C
+		{: 
+			String idValue = (String) value;
+			polaca(idValue);
+			System.out.println("Sentencia de Entrada: "); :}
     ;
 	
 salida
@@ -161,8 +201,11 @@ salida
     ;
 	
 asignacion 
-    ::= listaid OP_ASIG expresion
-		{: System.out.println("Lista de asignacion de variables: "); :}
+    ::= listaid OP_ASIG:value expresion
+		{: 	//polaca(myVal);
+			String opAsigValue = (String) value;
+			polaca(opAsigValue);
+			System.out.println("Lista de asignacion de variables: "); :}
     ;
 	
 seleccion 
@@ -196,23 +239,37 @@ comparacion
     ;
 
 comparador 
-    ::= OP_MAYIG 
-    {: System.out.println("Comparador >= "); :}
-    | OP_MENIG 
-    {: System.out.println("Comparador <= "); :}
-    | OP_MAY 
-    {: System.out.println("Comparador > "); :}
-    | OP_MEN 
-    {: System.out.println("Comparador < "); :}
-    | OP_IG
-    {: System.out.println("Comparador == "); :}
+    ::= OP_MAYIG:value 
+    {: 	String opMayIgValue = (String) value;
+		polaca(opMayIgValue);
+		System.out.println("Comparador >= "); :}
+    | OP_MENIG:value 
+    {:  String opMenIgValue = (String) value;
+		polaca(opMenIgValue);
+		System.out.println("Comparador <= "); :}
+    | OP_MAY:value  
+	{: 	String opMayValue = (String) value;
+		polaca(opMayValue);
+		System.out.println("Comparador > "); :}
+    | OP_MEN:value  
+    {: 	String opMenValue = (String) value;
+		polaca(opMenValue);
+		System.out.println("Comparador < "); :}
+    | OP_IG:value 
+    {: 	String opIgValue = (String) value;
+		polaca(opIgValue);
+		System.out.println("Comparador == "); :}
     ;
 
 expresion 
-    ::= expresion OP_MAS termino 
-		{: System.out.println("Expresión suma: "); :}
-    | expresion OP_RES termino 
-		{: System.out.println("Expresión resta: "); :}
+    ::= expresion OP_MAS:value termino 
+		{: String opMasValue = (String) value;
+			polaca(opMasValue);
+			System.out.println("Expresión suma: "); :}
+    | expresion OP_RES:value termino 
+		{: 	String opMenosValue = (String) value;
+			polaca(opMenosValue);
+			System.out.println("Expresión resta: "); :}
     | termino
 		{: System.out.println("Expresión simple: "); :}
 	| funcion
@@ -221,53 +278,77 @@ expresion
 	
 funcion
 	 ::= GETPENULTIMATEPOSITION PAR_A COR_A listaconst COR_C PAR_C
-		{: System.out.println("Funcion especial : "); :}
+		{: 	myVal = desapilar();
+			myVal = desapilar();
+			polaca(myVal);
+			System.out.println("Funcion especial : "); :}
 	| 	TRIANGULO PAR_A expresion COMA expresion COMA expresion PAR_C
 		{: System.out.println("Funcion especial: "); :}
 	;
 
 listaconst
-	 ::= listaconst COMA CONST_ENT
-		{: System.out.println("Componente de lista: Constante entera "); :}
-	|	listaconst COMA CONST_FLT
-		{: System.out.println("Componente de lista: Constante flotante "); :}
-	|	 CONST_FLT
-		{: System.out.println("Constante entera: "); :}
-	|	 CONST_ENT
-		{: System.out.println("Constante entera: "); :}
+	 ::= listaconst COMA CONST_ENT:value
+		{:  String cteEntValue = (String) value;
+			apilar(cteEntValue);
+			//polaca(cteEntValue);
+			System.out.println("Componente de lista: Constante entera "); :}
+	|	listaconst COMA CONST_FLT:value
+		{: 	String cteFltValue = (String) value;
+			apilar(cteFltValue);
+			//polaca(cteFltValue);
+			System.out.println("Componente de lista: Constante flotante "); :}
+	|	 CONST_FLT:value
+		{: 	String cteFltValue = (String) value;
+			apilar(cteFltValue);
+			//polaca(cteFltValue);
+			System.out.println("Constante entera: "); :}
+	|	 CONST_ENT:value
+		{: 	String cteEntValue = (String) value;
+			apilar(cteEntValue);
+			//polaca(cteEntValue);
+			System.out.println("Constante entera: "); :}
 	;
 
 	
 termino 
-    ::= termino OP_MULT factor 
-		{: System.out.println("Término multiplicación: "); :}
-    | termino OP_DIV factor 
-		{: System.out.println("Término división: " + " / "); :}
+    ::= termino OP_MULT:value factor 
+		{:  String opMultValue = (String) value;
+			polaca(opMultValue);
+			System.out.println("Término multiplicación: "); :}
+    | termino OP_DIV:value  factor 
+		{: String opDivValue = (String) value;
+			polaca(opDivValue);
+			System.out.println("Término división: " + " / "); :}
     | factor
 		{: System.out.println("Término simple: " ); :}
     ;
 
 factor 
     ::= ID:value 
-		{: 
+		{:  String idValue = (String) value;
+			polaca(idValue);
 			System.out.println("Factor ID: " ); 
 			//currentSymbol = new SymbolTableStruct(null,null,null,0);
 		:}
     | CONST_ENT:value 
-		{: 
+		{:  String cteEntValue = (String) value;
+			polaca(cteEntValue);
 			System.out.println("Factor constante entera: " ); 
 			//symbolList.add(new SymbolTableStruct("_".concat(value.toString()),"Int",value,0));
 		:}
 	| CONST_FLT:value 
-		{: 
+		{:  String cteFltValue = (String) value;
+			polaca(cteFltValue);
 			System.out.println("Factor constante flotante: " ); 
 			//symbolList.add(new SymbolTableStruct("_".concat(value.toString()),"Float",value,0));
 		:}
 	| CONST_STR:value
-		{: 
+		{:  String cteSrtValue = (String) value;
+			polaca(cteSrtValue);
 			System.out.println("Factor constante string: " ); 
 			//symbolList.add(new SymbolTableStruct("_".concat(value.toString()),"String",value,value.toString().length()));
 		:}
     | PAR_A expresion PAR_C
-		{: System.out.println("Factor expresión entre paréntesis: "); :}
+		{:  
+			System.out.println("Factor expresión entre paréntesis: "); :}
     ;
