@@ -13,8 +13,9 @@ parser code
 {:
 	String myVal;
   // Lista para almacenar el código intermedio
-  public List<String> intermediateCode = new ArrayList<>();
-   public Stack<String> stack = new Stack<>(); // La pila para almacenar IDs y valores
+  	 int intCodeIdx = 0;
+     public List<String> intermediateCode = new ArrayList<>();
+     public Stack<String> stack = new Stack<>(); // La pila para almacenar IDs y valores
 
   public List<String> getIntermediateCode() {
     return intermediateCode;
@@ -22,8 +23,68 @@ parser code
 
   public void polaca(String code) {
     intermediateCode.add(code);
+    System.out.println("Valor agregado a polaca: " + code);
+    intCodeIdx++;
   }
   
+  public void insertarCmp(){
+  	 polaca("CMP");
+  } 
+	
+  public void insertarBi(){
+  	 polaca("BI");
+  } 	
+
+  public void insertarBge(String value){
+  	//BUSCAR EN LAS CONSTANTES Y PONER EL CODIGO BGE;BLE;ETC
+  	//REEMPLAZAR ESTO POR EL CODIGO BGE
+  	 polaca(value);
+  } 
+  
+  public void insertarBge(){
+  	 String value = desapilar();
+  	//BUSCAR EN LAS CONSTANTES Y PONER EL CODIGO BGE;BLE;ETC
+  	//REEMPLAZAR ESTO POR EL CODIGO BGE
+  	 polaca(value);
+  } 
+  
+  public void avanzar(){
+  	 apilar(String.valueOf(intCodeIdx));
+  	 polaca("GOTO");
+  }
+  
+  public void escribirGoTo(){
+  	String value = desapilar();
+  	System.out.println("Desapilo en goTo: " + value);
+  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx));
+  }
+  
+  public void escribirGoToSino(){
+  	String value = desapilar();
+  	System.out.println("Desapilo en goToSino: " + value);
+  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx + 1));
+  	apilar(String.valueOf(intCodeIdx));
+  }
+  
+  public void escribirGoToSinoEnd(){
+  	String value = desapilar();
+  	System.out.println("Desapilo en goToSinoEnd: " + value);
+  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx));
+  	//intCodeIdx++;
+  }
+  
+  public void escribirET(){
+  	polaca("ET");
+  }
+  
+  
+  public void escribirGoToMientras(){
+  	String value = desapilar();
+  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx));
+  	value = desapilar();
+  	polaca(value);
+  }
+
   public void apilar(String value) {
     stack.push(value);
     System.out.println("Valor agregado a la pila: " + value);
@@ -102,6 +163,7 @@ non terminal funcion;
 non terminal listaconst;
 non terminal termino;
 non terminal factor;
+non terminal acciones_seleccion;
 
 // Start Symbol Definition
 // Start Symbol Definition
@@ -194,10 +256,10 @@ entrada
     ;
 	
 salida
-	::= WRITE PAR_A CONST_STR PAR_C
-		{: System.out.println("Sentencia de entrada de una constante string: "); :}
+	::= WRITE PAR_A CONST_STR:value {: polaca((String) value) ; :} PAR_C
+		{: System.out.println("Sentencia de salida de una constante string: "); :}
 	|   WRITE PAR_A ID PAR_C
-		{: System.out.println("Sentencia de entrada de un id: "); :}
+		{: System.out.println("Sentencia de salida de un id: "); :}
     ;
 	
 asignacion 
@@ -209,26 +271,22 @@ asignacion
     ;
 	
 seleccion 
-    ::= SI PAR_A condicion PAR_C LLAVE_A programa LLAVE_C 
-		{: System.out.println("Estructura if con condición: "); :}
-    | SI PAR_A condicion PAR_C LLAVE_A programa LLAVE_C SINO LLAVE_A programa LLAVE_C
+    ::= SI PAR_A condicion PAR_C acciones_seleccion LLAVE_A programa LLAVE_C {: escribirGoTo(); :}
+    | SI PAR_A condicion PAR_C acciones_seleccion LLAVE_A programa LLAVE_C SINO {: insertarBi(); escribirGoToSino(); avanzar(); :} LLAVE_A programa LLAVE_C {: escribirGoToSinoEnd(); :}
 		{: System.out.println("Estructura if-else con condición: "); :}
     ;
 
 iteracion 
-    ::= MIENTRAS PAR_A condicion PAR_C LLAVE_A programa LLAVE_C 
+    ::= MIENTRAS {: apilar(String.valueOf(intCodeIdx)); escribirET(); :} PAR_A condicion {: insertarCmp(); insertarBge(); avanzar(); :} PAR_C LLAVE_A programa  {: insertarBi(); escribirGoToMientras(); :} LLAVE_C 
 		{: System.out.println("Estructura while con condición: "); :}
     | FOR PAR_A asignacion PYC condicion PYC expresion PAR_C LLAVE_A programa LLAVE_C
 		{: System.out.println("Estructura for con asignación: " +", condición: " + ", y expresión: " ); :}
     ;
  
 condicion 
-    ::= comparacion 
-		{: System.out.println("Condición simple: "); :}
+    ::= comparacion 	
     | condicion AND comparacion 
-		{: System.out.println("Condición compuesta con AND: " +  " && "); :}
     | condicion OR comparacion
-		{: System.out.println("Condición compuesta con OR: " + " || "); :}
     ;
 
 comparacion 
@@ -241,23 +299,23 @@ comparacion
 comparador 
     ::= OP_MAYIG:value 
     {: 	String opMayIgValue = (String) value;
-		polaca(opMayIgValue);
+    	apilar((String) value);
 		System.out.println("Comparador >= "); :}
     | OP_MENIG:value 
     {:  String opMenIgValue = (String) value;
-		polaca(opMenIgValue);
-		System.out.println("Comparador <= "); :}
+		System.out.println("Comparador <= ");
+		apilar((String) value); :}
     | OP_MAY:value  
-	{: 	String opMayValue = (String) value;
-		polaca(opMayValue);
-		System.out.println("Comparador > "); :}
+	{: 	String opMayValue = (String) value;	
+		System.out.println("Comparador > "); 
+		apilar((String) value); :}
     | OP_MEN:value  
     {: 	String opMenValue = (String) value;
-		polaca(opMenValue);
-		System.out.println("Comparador < "); :}
+		System.out.println("Comparador < "); 
+		apilar((String) value); :}
     | OP_IG:value 
     {: 	String opIgValue = (String) value;
-		polaca(opIgValue);
+    	apilar((String) value);
 		System.out.println("Comparador == "); :}
     ;
 
@@ -328,27 +386,29 @@ factor
 		{:  String idValue = (String) value;
 			polaca(idValue);
 			System.out.println("Factor ID: " ); 
-			//currentSymbol = new SymbolTableStruct(null,null,null,0);
+			
 		:}
     | CONST_ENT:value 
 		{:  String cteEntValue = (String) value;
 			polaca(cteEntValue);
 			System.out.println("Factor constante entera: " ); 
-			//symbolList.add(new SymbolTableStruct("_".concat(value.toString()),"Int",value,0));
+		
 		:}
 	| CONST_FLT:value 
 		{:  String cteFltValue = (String) value;
 			polaca(cteFltValue);
 			System.out.println("Factor constante flotante: " ); 
-			//symbolList.add(new SymbolTableStruct("_".concat(value.toString()),"Float",value,0));
+		
 		:}
 	| CONST_STR:value
-		{:  String cteSrtValue = (String) value;
+		{:  
+		    String cteSrtValue = (String) value;
 			polaca(cteSrtValue);
 			System.out.println("Factor constante string: " ); 
-			//symbolList.add(new SymbolTableStruct("_".concat(value.toString()),"String",value,value.toString().length()));
 		:}
     | PAR_A expresion PAR_C
 		{:  
 			System.out.println("Factor expresión entre paréntesis: "); :}
     ;
+acciones_seleccion
+     ::=   {: insertarCmp(); insertarBge(); avanzar(); :}; 

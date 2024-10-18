@@ -30,6 +30,10 @@ x := 2
 
 *- condicion compuesta AND -*
 
+si( a < b){
+	escribir("a es mas chico que b")
+}
+
 si ( a > b  AND  c > d )
 {
     escribir("a es mas grande que b")

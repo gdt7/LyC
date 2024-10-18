@@ -28,8 +28,21 @@ public class IntermediateCodeGenerator implements FileGenerator {
 
     @Override
     public void generate(FileWriter fileWriter) throws IOException {
+    	boolean isBreakline = false;
+    	int idx = 0;
+//        for (String code : parser.intermediateCode) {
+//        	if(isBreakline) {
+//        		fileWriter.write(code + "\n"); // Escribe cada línea en el archivo
+//        		isBreakline = false;        		
+//        	}
+//        	else
+//        		fileWriter.write(code + " ");
+//        	if(code.equalsIgnoreCase(":="))
+//        		isBreakline = true;
+//        }
         for (String code : parser.intermediateCode) {
-            fileWriter.write(code + "\n"); // Escribe cada línea en el archivo
+        	fileWriter.write(String.valueOf(idx) + "\t" + code + "\n");
+        	idx++;
         }
     }
 
