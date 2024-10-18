@@ -5,18 +5,23 @@ import lyc.compiler.model.SymbolTableStruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import lyc.compiler.model.CompilerException;
+import lyc.compiler.model.IdentifierAlreadyExistsException;
 
 
 class Parser;
 
 parser code
 {:
+	public List<SymbolTableStruct> symbolTable = new ArrayList<>();
+	
 	String myVal;
   // Lista para almacenar el código intermedio
   	 int intCodeIdx = 0;
      public List<String> intermediateCode = new ArrayList<>();
      public Stack<String> stack = new Stack<>(); // La pila para almacenar IDs y valores
-
+	 public Stack<String> idsStack = new Stack<>();
+	 
   public List<String> getIntermediateCode() {
     return intermediateCode;
   }
@@ -100,6 +105,24 @@ parser code
       return null;
     }
   }
+  
+  public void completarTablaSimbolosConTipoDato(String type) throws CompilerException{
+  	while(!idsStack.isEmpty()){
+		String value = idsStack.pop();
+		for(SymbolTableStruct s : symbolTable){
+			if(s.getNombre().equals("_".concat(value))){
+				validarSiEsDuplicada(s);
+				s.setTipoDato(type);	
+			}
+		}
+	}	
+  }
+  
+  private void validarSiEsDuplicada(SymbolTableStruct tableValue) throws CompilerException{
+  	if(tableValue.getTipoDato() != null)
+  	  throw new IdentifierAlreadyExistsException("Identifier already exists: " + tableValue.getNombre());
+  }
+  
 :};
 
 // Terminals
@@ -191,19 +214,25 @@ listadec
 		{: System.out.println("Lista de sentencia de declaracion de variables: "); :}
 	| sentdec 
 		{: 
-			System.out.println("Sentencia unica de declaracion de variables: "); 
-			//symbolList.add(currentSymbol);	
+			System.out.println("Sentencia unica de declaracion de variables: ");
 		:}
     ;
 
 sentdec
 	::= listaid DOS_PUNTOS INT
-		{: 	System.out.println("Lista de variables enteras: "); :}
+		{: 	
+			System.out.println("Lista de variables enteras: ");
+			completarTablaSimbolosConTipoDato("INT"); 
+		:}
 	| 	listaid DOS_PUNTOS FLOAT
-		{: 	System.out.println("Lista de variables flotantes: "); :}
+		{: 	
+			System.out.println("Lista de variables flotantes: "); 
+			completarTablaSimbolosConTipoDato("FLOAT");	
+		:}
 	| 	listaid DOS_PUNTOS STRING
 		{: 	
 			System.out.println("Lista de variables strings: ");
+			completarTablaSimbolosConTipoDato("STRING");
 		:}
 		
     ;
@@ -213,11 +242,13 @@ listaid
 		{: 	
 			String idValue = (String) ident;
 			polaca(idValue);
+			idsStack.push(idValue);
 			System.out.println("Lista de IDs: "); :}
 	| 	ID:ident
 		{: 	
 			String idValue = (String) ident;
 			polaca(idValue);
+			idsStack.push(idValue);
 			System.out.println("Lista de variables strings: ");
 		:}
 
@@ -263,11 +294,13 @@ salida
     ;
 	
 asignacion 
-    ::= listaid OP_ASIG:value expresion
-		{: 	//polaca(myVal);
+    ::= listaid OP_ASIG:value expresion 
+		{: 	
 			String opAsigValue = (String) value;
 			polaca(opAsigValue);
-			System.out.println("Lista de asignacion de variables: "); :}
+			System.out.println("Lista de asignacion de variables: ");
+			
+		:}
     ;
 	
 seleccion 
@@ -348,22 +381,19 @@ listaconst
 	 ::= listaconst COMA CONST_ENT:value
 		{:  String cteEntValue = (String) value;
 			apilar(cteEntValue);
-			//polaca(cteEntValue);
+			idsStack.push(cteEntValue);
 			System.out.println("Componente de lista: Constante entera "); :}
 	|	listaconst COMA CONST_FLT:value
 		{: 	String cteFltValue = (String) value;
 			apilar(cteFltValue);
-			//polaca(cteFltValue);
 			System.out.println("Componente de lista: Constante flotante "); :}
 	|	 CONST_FLT:value
 		{: 	String cteFltValue = (String) value;
 			apilar(cteFltValue);
-			//polaca(cteFltValue);
 			System.out.println("Constante entera: "); :}
 	|	 CONST_ENT:value
 		{: 	String cteEntValue = (String) value;
 			apilar(cteEntValue);
-			//polaca(cteEntValue);
 			System.out.println("Constante entera: "); :}
 	;
 
@@ -385,6 +415,7 @@ factor
     ::= ID:value 
 		{:  String idValue = (String) value;
 			polaca(idValue);
+			idsStack.push(idValue);
 			System.out.println("Factor ID: " ); 
 			
 		:}

@@ -78,8 +78,8 @@ public class SymbolTableStruct {
 		
 		SymbolTableStruct other = (SymbolTableStruct) obj;
 
-		return (nombre != null ? nombre.equals(other.nombre) : other.nombre == null)
-				&& (tipoDato != null ? tipoDato.equals(other.tipoDato) : other.tipoDato == null)
-				&& (valor != null ? valor.equals(other.valor) : other.valor == null) && longitud == other.longitud;
+		return (nombre != null ? nombre.equals(other.nombre) : other.nombre == null);
+//				&& (tipoDato != null ? tipoDato.equals(other.tipoDato) : other.tipoDato == null)
+//				&& (valor != null ? valor.equals(other.valor) : other.valor == null) && longitud == other.longitud;
 	}
 }

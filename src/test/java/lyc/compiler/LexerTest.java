@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static com.google.common.truth.Truth.assertThat;
 import static lyc.compiler.constants.Constants.MAX_LENGTH;
@@ -180,6 +181,7 @@ public class LexerTest {
 
   private void scan(String input) {
     lexer = LexerFactory.create(input);
+    lexer.symbolList = new ArrayList<>();
   }
 
   private int nextToken() throws IOException, CompilerException {

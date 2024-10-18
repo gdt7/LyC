@@ -3,7 +3,9 @@
 init {
     a1, b1 : Float
     variable1,x, z: Int
-    p1, p2, p3, z : String
+    p1, p2, p3, z4 : String
+    *-validacion de duplicacion de variable -*
+    *- z : String-*
 }
 
 

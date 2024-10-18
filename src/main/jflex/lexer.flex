@@ -31,10 +31,10 @@ import static lyc.compiler.constants.Constants.*;
   }
   
   public SymbolTableStruct currentSymbol;
-  public List<SymbolTableStruct> symbolList = new ArrayList();
+  public List<SymbolTableStruct> symbolList;
   
   
-  private void addToSymbolListIfNotExists(SymbolTableStruct symbol){
+  private void addToSymbolListIfNotExists(SymbolTableStruct symbol) throws IdentifierAlreadyExistsException{
   		if(!symbolList.contains(symbol))
   			symbolList.add(symbol);
   }

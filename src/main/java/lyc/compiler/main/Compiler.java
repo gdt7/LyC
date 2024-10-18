@@ -1,23 +1,28 @@
 package lyc.compiler.main;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+
 import lyc.compiler.Lexer;
 import lyc.compiler.Parser;
 import lyc.compiler.factories.FileFactory;
 import lyc.compiler.factories.LexerFactory;
 import lyc.compiler.factories.ParserFactory;
 import lyc.compiler.files.FileOutputWriter;
-import lyc.compiler.files.SymbolTableGenerator;
 import lyc.compiler.files.IntermediateCodeGenerator;
-
-
-import java.io.IOException;
-import java.io.Reader;
+import lyc.compiler.files.SymbolTableGenerator;
+import lyc.compiler.model.SymbolTableStruct;
 
 public final class Compiler {
 
     private Compiler(){}
-
+    
+    
+    
     public static void main(String[] args) {
+    	List<SymbolTableStruct> symbolTable = new ArrayList<>();
         if (args.length != 1) {
             System.out.println("Filename must be provided as argument.");
             System.exit(0);
@@ -25,7 +30,9 @@ public final class Compiler {
 
         try (Reader reader = FileFactory.create(args[0])) {
         	Lexer lexer = LexerFactory.create(reader);
+        	lexer.symbolList = symbolTable;
         	Parser parser = ParserFactory.create(lexer);
+        	parser.symbolTable = symbolTable;
             parser.parse();
             FileOutputWriter.writeOutput("symbol-table.txt", new SymbolTableGenerator(lexer));
             FileOutputWriter.writeOutput("intermediate-code.txt", new IntermediateCodeGenerator(parser));
