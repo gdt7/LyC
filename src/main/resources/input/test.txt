@@ -1,9 +1,9 @@
 *- soy un comentario -*
 
 init {
-    a1, b1 : Float
+    x ,a1, b1 , h1: Float
     variable1,x, z: Int
-    p1, p2, p3, z4 : String
+    p1, p2, p3, z4 , a1: String
     *-validacion de duplicacion de variable -*
     *- z : String-*
 }
@@ -15,7 +15,7 @@ init {
 *- validación de cotas enteros -*
 *- a := 99999999999999999 -*
 
-a := 9999.99
+apu := 9999.99
 a := 99.
 a := .9999
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Stack;
 import lyc.compiler.model.CompilerException;
 import lyc.compiler.model.IdentifierAlreadyExistsException;
+import lyc.compiler.model.IdentifierNotDeclaredException;
 
 
 class Parser;
@@ -21,6 +22,8 @@ parser code
      public List<String> intermediateCode = new ArrayList<>();
      public Stack<String> stack = new Stack<>(); // La pila para almacenar IDs y valores
 	 public Stack<String> idsStack = new Stack<>();
+	 public Stack<String> idsStackGeneral = new Stack<>();
+	 public Stack<String> pilaVariablesDeclaradas = new Stack<>();
 	 
   public List<String> getIntermediateCode() {
     return intermediateCode;
@@ -123,6 +126,22 @@ parser code
   	  throw new IdentifierAlreadyExistsException("Identifier already exists: " + tableValue.getNombre());
   }
   
+  
+    private void validarVariableNoDeclarada(String variable) throws CompilerException{
+	
+		if (!pilaVariablesDeclaradas.contains(variable)) {
+            throw new IdentifierNotDeclaredException ("Variable no declarada: " + variable);
+        }
+		
+	}
+  
+	  private void validarVariableDeclaradaDuplicada(String variable) throws CompilerException {
+		if (pilaVariablesDeclaradas.contains(variable)) {
+            throw new IdentifierAlreadyExistsException("Variable duplicada encontrada: " + variable);
+        }
+        pilaVariablesDeclaradas.push(variable);
+	}
+  
 :};
 
 // Terminals
@@ -206,7 +225,8 @@ ss
 	
 declaracion
 	::= INIT LLAVE_A listadec LLAVE_C
-		{: System.out.println("Declaracion de variables: "); :}
+		{: 
+			System.out.println("Declaracion de variables: "); :}
     ;
 
 listadec
@@ -243,12 +263,18 @@ listaid
 			String idValue = (String) ident;
 			polaca(idValue);
 			idsStack.push(idValue);
+			validarVariableDeclaradaDuplicada(idValue);
+			//pilaVariablesDeclaradas.push(idValue);
+			//validarVariableDeclarada(idValue);
 			System.out.println("Lista de IDs: "); :}
 	| 	ID:ident
 		{: 	
 			String idValue = (String) ident;
 			polaca(idValue);
 			idsStack.push(idValue);
+			validarVariableDeclaradaDuplicada(idValue);
+			//pilaVariablesDeclaradas.push(idValue);
+			//validarVariableDeclarada(idValue);
 			System.out.println("Lista de variables strings: ");
 		:}
 
@@ -294,8 +320,9 @@ salida
     ;
 	
 asignacion 
-    ::= listaid OP_ASIG:value expresion 
-		{: 	
+    ::= ID:ident OP_ASIG:value expresion 
+		{: 	String idValue = (String) ident;
+			validarVariableNoDeclarada(idValue);
 			String opAsigValue = (String) value;
 			polaca(opAsigValue);
 			System.out.println("Lista de asignacion de variables: ");
@@ -374,7 +401,10 @@ funcion
 			polaca(myVal);
 			System.out.println("Funcion especial : "); :}
 	| 	TRIANGULO PAR_A expresion COMA expresion COMA expresion PAR_C
-		{: System.out.println("Funcion especial: "); :}
+		{: 
+			/***COMPLETAR***/
+			
+			System.out.println("Funcion especial: "); :}
 	;
 
 listaconst
@@ -416,6 +446,7 @@ factor
 		{:  String idValue = (String) value;
 			polaca(idValue);
 			idsStack.push(idValue);
+			validarVariableNoDeclarada(idValue);
 			System.out.println("Factor ID: " ); 
 			
 		:}
