@@ -33,12 +33,11 @@ public final class Compiler {
         	Lexer lexer = LexerFactory.create(reader);
         	lexer.symbolList = cState.getSymbolTable();
         	Parser parser = ParserFactory.create(lexer);
-        	parser.symbolTable = cState.getSymbolTable();
-        	parser.intermediateCode = cState.getIntermediateCode();
+        	parser.cState = cState;
             parser.parse();
             FileOutputWriter.writeOutput("symbol-table.txt", new SymbolTableGenerator(lexer));
             FileOutputWriter.writeOutput("intermediate-code.txt", new IntermediateCodeGenerator(parser));
-            FileOutputWriter.writeOutput("final.asm", new AsmCodeGenerator(cState));
+           // FileOutputWriter.writeOutput("final.asm", new AsmCodeGenerator(cState));
         } catch (IOException e) {
             System.err.println("There was an error trying to read input file " + e.getMessage());
             System.exit(0);

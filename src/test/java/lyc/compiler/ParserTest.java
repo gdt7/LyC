@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java_cup.runtime.Symbol;
 import lyc.compiler.factories.ParserFactory;
+import lyc.compiler.model.CompilerState;
 
 //@Disabled
 public class ParserTest {
@@ -150,13 +151,13 @@ public class ParserTest {
     
     private static Parser createParser(String input) {
     	Parser parser = ParserFactory.create(input);
-    	parser.symbolTable = new ArrayList<>();
+    	parser.cState = new CompilerState();
     	return parser;
     }
     
     private Symbol scan(String input) throws Exception {
     	Parser parser = ParserFactory.create(input);
-    	parser.symbolTable = new ArrayList<>();
+    	parser.cState = new CompilerState();
     	return parser.parse();
     }
 

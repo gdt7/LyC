@@ -11,6 +11,7 @@ public class CompilerState {
 	private List<SymbolTableStruct> symbolTable;
 	private List<String> intermediateCode;
 	private Stack<SymbolTableStruct> assemblerVariables;
+	private String assemblerCode;
 	
 	public CompilerState() {
 		symbolTable = new ArrayList<SymbolTableStruct>();
@@ -39,4 +40,7 @@ public class CompilerState {
 		this.assemblerVariables = assemblerVariables;
 	}
 	
+	public void setAssemblerCode(String assemblerCode) {
+		this.assemblerCode = assemblerCode;
+	}
 }

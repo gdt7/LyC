@@ -8,13 +8,17 @@ import java.util.Stack;
 import lyc.compiler.model.CompilerException;
 import lyc.compiler.model.IdentifierAlreadyExistsException;
 import lyc.compiler.model.IdentifierNotDeclaredException;
+import lyc.compiler.files.FileOutputWriter;
+import lyc.compiler.files.AsmCodeGenerator;
+import lyc.compiler.model.CompilerState;
 
 
 class Parser;
 
 parser code
 {:
-	public List<SymbolTableStruct> symbolTable = new ArrayList<>();
+
+	public CompilerState cState;
 	
 	String myVal;
   // Lista para almacenar el código intermedio
@@ -27,6 +31,12 @@ parser code
 	 
   public List<String> getIntermediateCode() {
     return intermediateCode;
+  }
+
+
+  private void generateAssembler(){
+  	 cState.setIntermediateCode(intermediateCode);
+  	 FileOutputWriter.writeOutput("final.asm", new AsmCodeGenerator(cState)); 
   }
 
   public void polaca(String code) {
@@ -112,7 +122,7 @@ parser code
   public void completarTablaSimbolosConTipoDato(String type) throws CompilerException{
   	while(!idsStack.isEmpty()){
 		String value = idsStack.pop();
-		for(SymbolTableStruct s : symbolTable){
+		for(SymbolTableStruct s : cState.getSymbolTable()){
 			if(s.getNombre().equals("_".concat(value))){
 				validarSiEsDuplicada(s);
 				s.setTipoDato(type);	
@@ -214,13 +224,13 @@ start with ss;
 // Grammar Rules
 ss 
     ::= declaracion programa
-		{: System.out.println("Inicio de programa principal con bloque de declaracion de variables: "); :}
+		{: System.out.println("Inicio de programa principal con bloque de declaracion de variables: "); generateAssembler();:}
 	| 	declaracion 
-		{: System.out.println("Inicio del programa principal con declaracion y sin programa: "); :}
+		{: System.out.println("Inicio del programa principal con declaracion y sin programa: ");generateAssembler(); :}
 	| 	 programa
-		{: System.out.println("Inicio del programa principal sin declaracion: "); :}
+		{: System.out.println("Inicio del programa principal sin declaracion: "); generateAssembler();:}
 	| 	 
-		{: System.out.println("Sin nada: "); :}
+		{: System.out.println("Sin nada: "); generateAssembler();:}
     ;
 	
 declaracion
