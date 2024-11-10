@@ -261,7 +261,7 @@ listaid
 	::= listaid COMA ID:ident
 		{: 	
 			String idValue = (String) ident;
-			polaca(idValue);
+			//polaca(idValue);
 			idsStack.push(idValue);
 			validarVariableDeclaradaDuplicada(idValue);
 			//pilaVariablesDeclaradas.push(idValue);
@@ -270,7 +270,7 @@ listaid
 	| 	ID:ident
 		{: 	
 			String idValue = (String) ident;
-			polaca(idValue);
+			//polaca(idValue);
 			idsStack.push(idValue);
 			validarVariableDeclaradaDuplicada(idValue);
 			//pilaVariablesDeclaradas.push(idValue);

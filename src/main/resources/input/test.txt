@@ -1,13 +1,13 @@
 *- soy un comentario -*
 
 init {
-    x ,a1, b1 , h1: Float
-    variable1,x, z: Int
-    p1, p2, p3, z4 , a1: String
+    a, b1 , h1,tri,tri2: Float
+    *- x,a1 : Float -*
+    variable1,x, z ,aInt,bInt,cInt,dInt : Int
+    p1, p2, p3, z4 , a1,b: String
     *-validacion de duplicacion de variable -*
     *- z : String-*
 }
-
 
 *- validación de cotas flotantes -*
 *- a := 99999999999.99 -*
@@ -15,7 +15,8 @@ init {
 *- validación de cotas enteros -*
 *- a := 99999999999999999 -*
 
-apu := 9999.99
+*-descomentar para error de variable no declarada -*
+*-  apu := 9999.99-*
 a := 99.
 a := .9999
 
@@ -27,16 +28,21 @@ b := "asldk  fh sjf"
 *- error carácter invalido -*
 *- c := ʉ -*
 
-x := 2
+*- x := 2 -*
+
+aInt := 3
+bInt := 5
+cInt := 7
+dInt := 9
 
 
 *- condicion compuesta AND -*
 
-si( a < b){
+si( aInt < bInt){
 	escribir("a es mas chico que b")
 }
 
-si ( a > b  AND  c > d )
+si ( aInt > bInt  AND  cInt > dInt )
 {
     escribir("a es mas grande que b")
     escribir("c es mas grande que d")
@@ -50,7 +56,9 @@ sino
 
 *- condicion compuesta OR -*
 
-si ( a > b  OR  c > d OR  e > f)
+*-Error de variable no declarada dentro de la condicion de un if-*
+*-si ( aInt > bInt  OR  cInt > dInt OR  e > f)-*
+si ( aInt > bInt  OR  cInt > dInt)
 {
     escribir("a es mas grande que b o")
     escribir("c es mas grande que d o") 
@@ -65,7 +73,7 @@ sino
 
 
 *- condicion simple -*
-si (a > b)
+si (aInt > bInt)
 {
     escribir("a es mas grande que b")
 }
@@ -77,11 +85,11 @@ sino
 
 *- condicion if anidado y sentencia leer-*
 
-si (a > b)
+si (aInt > bInt)
 {
-     si (c > d)
+     si (cInt > dInt)
 	{
-    	    escribir("a es mas grande que b")
+    	escribir("a es mas grande que b")
 	    escribir("c es mas grande que d")
 	}
 
@@ -93,10 +101,10 @@ sino
 }
 
 
-mientras (a > b)
+mientras (aInt > bInt)
 {
     escribir("a es mas grande que b")
-    a := a + 1
+    aInt := aInt + 1
 }
 
 tri := triangulo(3,a,b)
