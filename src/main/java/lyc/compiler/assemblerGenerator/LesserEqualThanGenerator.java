@@ -13,8 +13,7 @@ public class LesserEqualThanGenerator extends AssemblerGenerator{
 	}
 
 	@Override
-	public String generate(Stack<String> stack, CompilerState cState) throws IOException {
-		// TODO Auto-generated method stub
+	public String generate() throws IOException {
 		return null;
 	}
 

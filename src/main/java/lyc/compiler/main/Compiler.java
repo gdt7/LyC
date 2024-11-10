@@ -20,24 +20,18 @@ import lyc.compiler.model.SymbolTableStruct;
 public final class Compiler {
 
     private Compiler(){}
+        
+    CompilerState cState = new CompilerState();
     
-   
-    public static void main(String[] args) {
-    	CompilerState cState = new CompilerState();
+    public static void main(String[] args) {	
         if (args.length != 1) {
             System.out.println("Filename must be provided as argument.");
             System.exit(0);
         }
-
-        try (Reader reader = FileFactory.create(args[0])) {
-        	Lexer lexer = LexerFactory.create(reader);
-        	lexer.symbolList = cState.getSymbolTable();
-        	Parser parser = ParserFactory.create(lexer);
-        	parser.cState = cState;
-            parser.parse();
-            FileOutputWriter.writeOutput("symbol-table.txt", new SymbolTableGenerator(lexer));
-            FileOutputWriter.writeOutput("intermediate-code.txt", new IntermediateCodeGenerator(parser));
-           // FileOutputWriter.writeOutput("final.asm", new AsmCodeGenerator(cState));
+        
+        try {
+        	CompilerImpl impl = CompilerImpl.getInstance();        	
+        	impl.main(args);
         } catch (IOException e) {
             System.err.println("There was an error trying to read input file " + e.getMessage());
             System.exit(0);

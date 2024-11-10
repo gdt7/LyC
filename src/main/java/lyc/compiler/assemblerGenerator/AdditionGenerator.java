@@ -3,6 +3,7 @@ package lyc.compiler.assemblerGenerator;
 import java.io.IOException;
 import java.util.Stack;
 
+import lyc.compiler.main.CompilerImpl;
 import lyc.compiler.model.CompilerState;
 import lyc.compiler.model.SymbolTableStruct;
 
@@ -16,17 +17,18 @@ public class AdditionGenerator extends AssemblerGenerator{
 
 
 	@Override
-	public String generate(Stack<String> stack, CompilerState cState) throws IOException {
+	public String generate() throws IOException {
+		CompilerState cState = CompilerImpl.getInstance().getCompilerState();
 		String res = "";
-		String str2  = stack.pop();
-		String str1 = stack.pop();
+		String str2  = cState.getOperandStack().pop();
+		String str1 = cState.getOperandStack().pop();
 		
 		String auxName = getAuxiliaryVariableName(cState.getAssemblerVariables());
 		res.concat("MOV R1," + str1);
 		res.concat("ADD R1," + str2);
 		res.concat("MOV ".concat(auxName).concat(",R1"));
 		
-		stack.push(auxName);
+		cState.getOperandStack().push(auxName);
 		
 		//TENGO QUE VER QUE TIPO DE DATO SERIA LA NUEVA VARIABLE EN ASSEMBLER
 		//ESO SERIA CON LA TABLA DE SINTESIS(?)
