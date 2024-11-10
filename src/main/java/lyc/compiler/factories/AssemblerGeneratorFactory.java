@@ -40,7 +40,7 @@ public class AssemblerGeneratorFactory {
 		case "<=" : {
 			yield new LesserEqualThanGenerator();
 		}
-		case ":= " : {
+		case ":=" : {
 			yield new AssignmentGenerator();
 		}
 		case "CMP": {

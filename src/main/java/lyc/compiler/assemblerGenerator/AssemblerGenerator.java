@@ -17,6 +17,5 @@ public abstract class AssemblerGenerator {
 	protected String getAuxiliaryVariableName(Stack<SymbolTableStruct> stack) {
 		return "_@aux".concat(String.valueOf(stack.size()));
 	}
-	
-	
+
 }

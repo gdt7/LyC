@@ -2,6 +2,7 @@ package lyc.compiler.files;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
@@ -12,31 +13,35 @@ import lyc.compiler.model.SymbolTableStruct;
 public class AsmCodeGenerator implements FileGenerator {
 
 	private CompilerState cState;
+	private static List<String> operadores = Arrays.asList("+","-","*","/",":=");
+	
     public AsmCodeGenerator(CompilerState cState) {
 		this.cState = cState;
 	}
 
-   
-
+  
 	@Override
     public void generate(FileWriter fileWriter) throws IOException {
 		Stack<String> st = new Stack<>();
 		printAssemblerInitialCode(fileWriter);
 		String code = "";
         for(String s : cState.getIntermediateCode()) {
-        	if(isOperando()) {
+        	System.out.println(s);
+        	if(isOperando(s)) {
+//        		System.out.println("Pusheo a stack de operandos");
         		st.push(s);
-        		break;
-        	}else if(isOperador()) {
+        	}else if(isOperador(s)) {
+//        		System.out.println("Detecto operador");
         		AssemblerGenerator ag = AssemblerGeneratorFactory.create(s);
-        		code.concat(ag.generate(st,cState));
+        		code = code.concat(ag.generate(st,cState));
+        		System.out.println(code);
         	}else {
-        		
+//        		System.out.println("Salgo por default");
         	}
-        	fileWriter.write(s + "\n" );
         }
         printVariableDeclaration(fileWriter,cState);
         printCodeHeaderSection(fileWriter);
+        fileWriter.write(code);
         printCodeFooterSection(fileWriter);
     }
 
@@ -83,14 +88,12 @@ public class AsmCodeGenerator implements FileGenerator {
 	}
 
 
-	private boolean isOperador() {
-		// TODO Auto-generated method stub
-		return false;
+	private boolean isOperador(String s) {
+		return operadores.contains(s);
 	}
 
 
-	private boolean isOperando() {
-		// TODO Auto-generated method stub
-		return false;
+	private boolean isOperando(String s) {
+		return !operadores.contains(s);
 	}
 }

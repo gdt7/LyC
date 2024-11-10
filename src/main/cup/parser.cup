@@ -333,6 +333,7 @@ asignacion
     ::= ID:ident OP_ASIG:value expresion 
 		{: 	String idValue = (String) ident;
 			validarVariableNoDeclarada(idValue);
+			polaca(idValue);
 			String opAsigValue = (String) value;
 			polaca(opAsigValue);
 			System.out.println("Lista de asignacion de variables: ");
