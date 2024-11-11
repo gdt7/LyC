@@ -17,7 +17,7 @@ public class AdditionGenerator extends AssemblerGenerator{
 
 
 	@Override
-	public String generate() throws IOException {
+	public StringBuilder generate() throws IOException {
 		CompilerState cState = CompilerImpl.getInstance().getCompilerState();
 		String res = "";
 		String str2  = cState.getOperandStack().pop();
@@ -35,7 +35,7 @@ public class AdditionGenerator extends AssemblerGenerator{
 		SymbolTableStruct sts = new SymbolTableStruct(auxName,str1, 0, 0);
 		cState.getAssemblerVariables().push(sts);
 		
-		return res;
+		return new StringBuilder(res);
 	}
 
 }

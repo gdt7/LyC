@@ -13,7 +13,7 @@ public class MultiplicationGenerator extends AssemblerGenerator{
 	}
 	
 	@Override
-	public String generate() throws IOException {
+	public StringBuilder generate() throws IOException {
 		CompilerState cState = CompilerImpl.getInstance().getCompilerState();
 		String res = "";
 		String str2  = cState.getOperandStack().pop();
@@ -36,7 +36,7 @@ public class MultiplicationGenerator extends AssemblerGenerator{
 		
 		
 		
-		return res;
+		return new StringBuilder(res);
 	}
 
 }

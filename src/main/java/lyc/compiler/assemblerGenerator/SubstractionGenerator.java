@@ -15,7 +15,7 @@ public class SubstractionGenerator extends AssemblerGenerator{
 	}
 
 	@Override
-	public String generate() throws IOException {
+	public StringBuilder generate() throws IOException {
 		CompilerState cState = CompilerImpl.getInstance().getCompilerState();
 		String res = "";
 		
@@ -34,7 +34,7 @@ public class SubstractionGenerator extends AssemblerGenerator{
 		SymbolTableStruct sts = new SymbolTableStruct(auxName,str1, 0, 0);
 		cState.getAssemblerVariables().push(sts);
 		
-		return res;
+		return new StringBuilder(res);
 	}
 
 }

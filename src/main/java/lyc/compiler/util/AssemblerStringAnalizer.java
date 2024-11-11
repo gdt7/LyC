@@ -13,7 +13,7 @@ public class AssemblerStringAnalizer {
 	
 	private static List<String> operadores = Arrays.asList("+", "-", "*", "/", ":=","CMP");
 	
-	public static  String analizeString(String code) throws IOException {
+	public static  StringBuilder analizeString(StringBuilder code) throws IOException {
 		CompilerState cState = CompilerImpl.getInstance().getCompilerState(); 
 		String s = cState.getAssemblerCodeIt().next();
 		cState.setCurrentIndex(cState.getCurrentIndex()+1);
@@ -22,7 +22,7 @@ public class AssemblerStringAnalizer {
 			cState.getOperandStack().push(s);
 		} else if (isOperador(s)) {
 			AssemblerGenerator ag = AssemblerGeneratorFactory.create(s);
-			code = code.concat(ag.generate());
+			code = code.append(ag.generate());
 //			System.out.println(code);
 		} else {
 //          System.out.println("Salgo por default");

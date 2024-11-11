@@ -11,7 +11,7 @@ public abstract class AssemblerGenerator {
 	protected AssemblerGenerator() {
 	}
 	
-	public abstract String generate() throws IOException;
+	public abstract StringBuilder generate() throws IOException;
 	
 	
 	protected String getAuxiliaryVariableName(Stack<SymbolTableStruct> stack) {

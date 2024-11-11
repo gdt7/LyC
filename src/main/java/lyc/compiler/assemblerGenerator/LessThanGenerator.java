@@ -14,7 +14,7 @@ public class LessThanGenerator extends AssemblerGenerator {
 
 
 	@Override
-	public String generate() throws IOException {
+	public StringBuilder generate() throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
