@@ -47,18 +47,44 @@ public class AsmCodeGenerator implements FileGenerator {
 		String ret = "";
 		for (SymbolTableStruct s : cState.getSymbolTable()) {
 			String variableDeclaration = s.getNombre().toString().concat("\t");
-			if (s.getTipoDato() != null) {
-				// Habria que conertirlo aca al tipo de dato en assembler
-				variableDeclaration = variableDeclaration.concat(s.getTipoDato());
+			String assemblerType = "";
+			String valor = "";
+			if(s.getTipoDato() != null) {
+
+				switch (s.getTipoDato().toUpperCase()) {  // Convertir el tipo de dato a mayúsculas
+					case "FLOAT":
+						assemblerType = "DD"; // Double-Word para float (32 bits)
+						break;
+					case "INT":
+						assemblerType = "DW"; // Word para int (16 bits) o DD si es de 32 bits
+						break;
+					case "STRING":
+						assemblerType = "DB"; // Byte para string, con 0 al final como terminador
+						break;
+					default:
+						throw new IllegalArgumentException("Tipo de dato desconocido: " + s.getTipoDato());
+				}
+					
+				if (s.getValor() != null) {
+					valor = s.getValor().toString();
+				}else{
+					valor = "?";
+				}
+
+				 // Concatenamos el tipo de assembler con el nombre de la variable
+				 variableDeclaration = variableDeclaration.concat("\t").concat(assemblerType);
+				 variableDeclaration = variableDeclaration.concat("\t").concat(valor);
 			}
+
 			fileWriter.write(variableDeclaration.concat("\n"));
 		}
 		while (!cState.getAssemblerVariables().isEmpty()) {
 			SymbolTableStruct s = cState.getAssemblerVariables().pop();
 			String variableDeclaration = s.getNombre().toString().concat("\t");
+
 			if (s.getTipoDato() != null) {
-				// Habria que conertirlo aca al tipo de dato en assembler
-				variableDeclaration = variableDeclaration.concat(s.getTipoDato());
+				//variableDeclaration = variableDeclaration.concat(s.getTipoDato());
+				variableDeclaration = variableDeclaration.concat("\tDD").concat("\t?");
 			}
 			fileWriter.write(variableDeclaration.concat("\n"));
 		}
@@ -68,4 +94,6 @@ public class AsmCodeGenerator implements FileGenerator {
 	private void printAssemblerInitialCode(FileWriter fileWriter) throws IOException {
 		fileWriter.write(".MODEL LARGE \n .386 \n Stack 200h \n .DATA \n ");
 	}
+
+	
 }
