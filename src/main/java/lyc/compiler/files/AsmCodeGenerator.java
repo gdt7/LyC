@@ -27,7 +27,7 @@ public class AsmCodeGenerator implements FileGenerator {
 		StringBuilder code = new StringBuilder();
 		cState.setAssemblerCodeIt(cState.getIntermediateCode().iterator());
 		while (cState.getAssemblerCodeIt().hasNext()) {
-			code = code.append(AssemblerStringAnalizer.analizeString(code));
+			code = code.append(AssemblerStringAnalizer.analizeString(new StringBuilder()));
 		}
 		printVariableDeclaration(fileWriter, cState);
 		printCodeHeaderSection(fileWriter);

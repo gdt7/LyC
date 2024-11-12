@@ -35,10 +35,9 @@ public class SelectionGenerator extends AssemblerGenerator{
 			ret = ret.append(" else_part \n ");
 			ret = ret.append(" then_part: \n ");
 			while(currentIndex < Integer.valueOf(endIndex)) {
-				ret = ret.append(AssemblerStringAnalizer.analizeString(ret));
+				ret = ret.append(AssemblerStringAnalizer.analizeString(new StringBuilder()));
 				currentIndex = cState.getCurrentIndex();
 			}
-			
 			System.out.println("pase while selection");
 			//TENDRIA QUE LEER HASTA QUE APAREZCA DE NUEVO UN OPERANDO QUE MARQUE EL FIN DEL WHILE 
 			ret.append("");			
