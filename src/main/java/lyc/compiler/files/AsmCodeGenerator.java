@@ -23,16 +23,20 @@ public class AsmCodeGenerator implements FileGenerator {
 
 	@Override
 	public void generate(FileWriter fileWriter) throws IOException {
-		printAssemblerInitialCode(fileWriter);
-		StringBuilder code = new StringBuilder();
-		cState.setAssemblerCodeIt(cState.getIntermediateCode().iterator());
-		while (cState.getAssemblerCodeIt().hasNext()) {
-			code = code.append(AssemblerStringAnalizer.analizeString(new StringBuilder()));
-		}
-		printVariableDeclaration(fileWriter, cState);
-		printCodeHeaderSection(fileWriter);
-		fileWriter.write(code.toString());
-		printCodeFooterSection(fileWriter);
+//		try {
+			printAssemblerInitialCode(fileWriter);
+			StringBuilder code = new StringBuilder();
+			cState.setAssemblerCodeIt(cState.getIntermediateCode().iterator());
+			while (cState.getAssemblerCodeIt().hasNext()) {
+				code = code.append(AssemblerStringAnalizer.analizeString(new StringBuilder()));
+			}
+			printVariableDeclaration(fileWriter, cState);
+			printCodeHeaderSection(fileWriter);
+			fileWriter.write(code.toString());
+			printCodeFooterSection(fileWriter);
+//		}catch(Exception ex) {
+//			System.out.println(ex);
+//		}
 	}
 
 	private void printCodeHeaderSection(FileWriter fileWriter) throws IOException {

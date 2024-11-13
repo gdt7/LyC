@@ -13,12 +13,15 @@ public class SelectionGenerator extends AssemblerGenerator{
 		super();
 	}
 
-
+	/*
+	 * 
+	 * */
 	@Override
 	public StringBuilder generate() throws IOException {
 		System.out.println("Selection generator");
 		StringBuilder ret = new StringBuilder();
 		CompilerState cState = CompilerImpl.getInstance().getCompilerState();
+		cState.setComparisonPendingClose(true);
 		if(cState.getOperandStack().size() >= 2) {
 			String var1 = cState.getOperandStack().pop();
 			String var2 = cState.getOperandStack().pop();
@@ -28,16 +31,18 @@ public class SelectionGenerator extends AssemblerGenerator{
 			int currentIndex = cState.increaseIndex();
 			ret = new StringBuilder("FLD " + var1 + " \n ");
 			ret = ret.append(" FCOMP ").append(var2);
-			ret = ret.append(" fstsw ax \n sahf \n ");
+			ret = ret.append(" \n fstsw ax \n sahf \n ");
 //		//SEGUN EL COMPARISON TYPE TENGO QUE VER QUE JUMP HAGO
 			ret = ret.append(getJumpByComparisonType(comparisonType));
 //		//HACER ETIQUETAS DINAMICAS DE ALGUNA FORMA
-			ret = ret.append(" else_part \n ");
-			ret = ret.append(" then_part: \n ");
+			ret = ret.append(" et_final \n ");
+			int count = 0;
 			while(currentIndex < Integer.valueOf(endIndex)) {
+				System.out.println(count++);
 				ret = ret.append(AssemblerStringAnalizer.analizeString(new StringBuilder()));
 				currentIndex = cState.getCurrentIndex();
 			}
+			ret = ret.append(" et_final \n ");
 			System.out.println("pase while selection");
 			//TENDRIA QUE LEER HASTA QUE APAREZCA DE NUEVO UN OPERANDO QUE MARQUE EL FIN DEL WHILE 
 			ret.append("");			
@@ -49,7 +54,7 @@ public class SelectionGenerator extends AssemblerGenerator{
 
 	//HACER FUNCION DE CONVERSION
 	private String getJumpByComparisonType(String comparisonType) {
-		return comparisonType;
+		return "JMP " + comparisonType;
 	}
 
 }

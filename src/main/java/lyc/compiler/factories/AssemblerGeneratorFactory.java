@@ -9,8 +9,11 @@ import lyc.compiler.assemblerGenerator.DivisionGenerator;
 import lyc.compiler.assemblerGenerator.LessThanGenerator;
 import lyc.compiler.assemblerGenerator.LesserEqualThanGenerator;
 import lyc.compiler.assemblerGenerator.MultiplicationGenerator;
+import lyc.compiler.assemblerGenerator.ReadGenerator;
 import lyc.compiler.assemblerGenerator.SelectionGenerator;
 import lyc.compiler.assemblerGenerator.SubstractionGenerator;
+import lyc.compiler.assemblerGenerator.WhileGenerator;
+import lyc.compiler.assemblerGenerator.WriteGenerator;
 
 public class AssemblerGeneratorFactory {
 
@@ -46,8 +49,19 @@ public class AssemblerGeneratorFactory {
 		case "CMP": {
 			yield new SelectionGenerator();
 		}
+		case "write" : {
+			yield new WriteGenerator();
+		}
+		case "read" : {
+			yield new ReadGenerator();
+		}
+		case "ET":{
+			yield new WhileGenerator();
+		}
 		default:
-			throw new IllegalArgumentException("Unexpected value: " + s);
+			System.out.println("Unexpected value: " + s);
+			yield null;
+//			throw new IllegalArgumentException("Unexpected value: " + s);
 		};
 
 		return ag;

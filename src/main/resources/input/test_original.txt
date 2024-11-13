@@ -1,14 +1,14 @@
 *- soy un comentario -*
 
 init {
-    a, b1 , h1: Float
+    a, b1 , h1,tri,tri2: Float
     *- x,a1 : Float -*
     variable1,x, z ,aInt,bInt,cInt,dInt : Int
+    p1, p2, p3, z4 , a1,b: String
     *-validacion de duplicacion de variable -*
-    tri, tri1, tri2, tri3, tri4, tri5, p1, p2, p3, z4 , a1,b: String
+    *- z : String-*
 }
 
-<<<<<<< Updated upstream
 *- validación de cotas flotantes -*
 *- a := 99999999999.99 -*
 
@@ -24,62 +24,73 @@ a := .9999
 *- b := "asdaadadasdadasdadasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd" -*
 b := "@sdADaSjfla%dfg"
 b := "asldk  fh sjf"
-b := 9
 
 *- error carácter invalido -*
 *- c := ʉ -*
 
-x := 2.9 
-z := 2.909
+*- x := 2 -*
 
-=======
->>>>>>> Stashed changes
 aInt := 3
 bInt := 5
 cInt := 7
 dInt := 9
 
+
+*- condicion compuesta AND -*
+
+si( aInt < bInt){
+	escribir("a es mas chico que b")
+}
+
+si ( aInt > bInt  AND  cInt > dInt )
+{
+    escribir("a es mas grande que b")
+    escribir("c es mas grande que d")
+}
+sino
+{
+    escribir("a es mas chico o igual a b")
+    escribir("c es mas chico o igual a d")
+}
+
+
+*- condicion compuesta OR -*
+
+*-Error de variable no declarada dentro de la condicion de un if-*
+*-si ( aInt > bInt  OR  cInt > dInt OR  e > f)-*
+si ( aInt > bInt  OR  cInt > dInt)
+{
+    escribir("a es mas grande que b o")
+    escribir("c es mas grande que d o") 
+    escribir("e es mas grande que f")
+}
+sino
+{
+    escribir("a es mas chico o igual a b o")
+    escribir("c es mas chico o igual a d o")
+    escribir("e es mas chico o igual a f")
+}
+
+
+*- condicion simple -*
 si (aInt > bInt)
 {
     escribir("a es mas grande que b")
 }
 sino
 {
-<<<<<<< Updated upstream
     escribir("a es mas chico o igual a b")
 }
-
-
-=======
-    leer(f)
-}
-
->>>>>>> Stashed changes
 
 mientras (aInt > bInt)
 {
     escribir("a es mas grande que b")
-<<<<<<< Updated upstream
     aInt := aInt + 1
-    leer(f)
 }
 
-tri := "isosceles"
-tri := "escaleno"
-tri := "equilatero"
+tri := triangulo(3,a,b)
 
-aInt := 1.90 + 2
-
-bInt := 8 + 9
-
-cInt := 2 + 4
-
-tri1 := triangulo(aInt + 1, bInt, cInt + 2 + 2)
-tri2 := triangulo(aInt, 12, 4/2)
-tri3 := triangulo(3+5,6+2,3 - 1 * (9 - 3)) 
-tri4 := triangulo(3,6+2,9)
-tri5 := triangulo(aInt,aInt,aInt)
-
+tri2 := triangulo(3/x,z+4,b*26)
 
 x := getPenultimatePosition([3, 8.2, 2, 55.5, 6, 7.8, 3 ,68, 9.0])
 
@@ -92,7 +103,3 @@ x := getPenultimatePosition([3, 8.2, 2, 55.5, 6, 7.8, 3 ,68, 9.0])
 *- Ejemplo de funcion getPenultimatePosition con error -*
 *- x := getPenultimatePosition([3, 8.2, 2, 55.5) -*
 *- x := getPenultimatePosition([3, 8.2, 2, 55.5,b]) -*
-=======
-
-}
->>>>>>> Stashed changes

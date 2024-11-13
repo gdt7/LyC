@@ -35,6 +35,7 @@ parser code
 	 public Stack<String> idsStack = new Stack<>();
 	 public Stack<String> idsStackGeneral = new Stack<>();
 	 public Stack<String> pilaVariablesDeclaradas = new Stack<>();
+	 public Stack<String> pilaGoTo = new Stack<>();
 	 
   public List<String> getIntermediateCode() {
     return intermediateCode;
@@ -63,6 +64,7 @@ parser code
   public void insertarBge(String value){
   	//BUSCAR EN LAS CONSTANTES Y PONER EL CODIGO BGE;BLE;ETC
   	//REEMPLAZAR ESTO POR EL CODIGO BGE
+
   	 polaca(value);
   } 
   
@@ -74,39 +76,54 @@ parser code
   } 
   
   public void avanzar(){
-  	 apilar(String.valueOf(intCodeIdx));
+  	 apilarGoTo(String.valueOf(intCodeIdx));
+  	 System.out.println("GOTO EN : " + String.valueOf(intCodeIdx));
   	 polaca("GOTO");
+ 		
   }
   
   public void escribirGoTo(){
-  	String value = desapilar();
-  	System.out.println("Desapilo en goTo: " + value);
-  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx));
+  	String value = desapilarGoTo();
+  	while(value != null){
+	  	System.out.println("Desapilo en goTo: " + value);	
+	  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx));
+	  	value = desapilarGoTo();  	
+  	}
+  	apilarGoTo(String.valueOf(intCodeIdx));
+  	polaca("GOTO");
+  	
   }
   
   public void escribirGoToSino(){
-  	String value = desapilar();
-  	System.out.println("Desapilo en goToSino: " + value);
-  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx + 1));
-  	apilar(String.valueOf(intCodeIdx));
+  	 String value = desapilarGoTo();
+  	 while(value != null){
+  	 	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx + 1));
+  	 	value = desapilarGoTo();
+  	 }
+  	 apilarGoTo(String.valueOf(intCodeIdx));
+  	 polaca("GOTO");
   }
   
   public void escribirGoToSinoEnd(){
-  	String value = desapilar();
+  	String value = desapilarGoTo();
   	System.out.println("Desapilo en goToSinoEnd: " + value);
-  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx));
-  	//intCodeIdx++;
+  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx + 1));
   }
   
   public void escribirET(){
+  	apilarGoTo(String.valueOf(intCodeIdx));
   	polaca("ET");
   }
   
+ 
+  
   
   public void escribirGoToMientras(){
-  	String value = desapilar();
-  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx));
-  	value = desapilar();
+  	while(pilaGoTo.size() > 1){
+  		String value = desapilarGoTo();
+  		intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx + 1));
+  	}
+  	String value = desapilarGoTo();
   	polaca(value);
   }
 
@@ -119,6 +136,22 @@ parser code
     if (!stack.isEmpty()) {
       String value = stack.pop();
       System.out.println("Valor retirado de la pila: " + value);
+      return value;
+    } else {
+      System.out.println("Pila vacía");
+      return null;
+    }
+  }
+  
+  public void apilarGoTo(String value) {
+    pilaGoTo.push(value);
+    System.out.println("Valor agregado a la pila GoTo: " + value);
+  }
+  
+   public String desapilarGoTo() {
+    if (!pilaGoTo.isEmpty()) {
+      String value = pilaGoTo.pop();
+      System.out.println("Valor retirado de la pila Go To: " + value);
       return value;
     } else {
       System.out.println("Pila vacía");
@@ -331,7 +364,9 @@ non terminal funcion;
 non terminal listaconst;
 non terminal termino;
 non terminal factor;
-non terminal acciones_seleccion;
+non terminal acciones_comparacion;
+non terminal acciones_comparacion_OR;
+non terminal acciones_comparacion_AND;
 
 // Start Symbol Definition
 // Start Symbol Definition
@@ -435,17 +470,19 @@ entrada
 		{: 
 			String idValue = (String) value;
 			polaca(idValue);
+			polaca("read");
 			System.out.println("Sentencia de Entrada: "); :}
     ;
 	
 salida
-	::= WRITE PAR_A CONST_STR:value {: polaca((String) value) ; :} PAR_C
+	::= WRITE PAR_A CONST_STR:value {:   polaca((String) value) ; polaca("write"); :} PAR_C
 		{: System.out.println("Sentencia de salida de una constante string: "); :}
-	|   WRITE PAR_A ID PAR_C
-		{: System.out.println("Sentencia de salida de un id: "); :}
+	|   WRITE PAR_A ID PAR_C 
+		{:  polaca("write"); System.out.println("Sentencia de salida de un id: "); :}
     ;
 	
 asignacion 
+<<<<<<< Updated upstream
     ::= ID:ident OP_ASIG:value {: pos = obtenerPosicion();  :} expresion 
 		{: 	
 				float res = resolverExpresion(pos);
@@ -458,6 +495,15 @@ asignacion
 				table.put(idValue, res);
 				System.out.println("Lista de asignacion de variables: ");
 					
+=======
+    ::= ID:ident OP_ASIG:value expresion 
+		{: 	String idValue = (String) ident;
+			validarVariableNoDeclarada(idValue);
+			polaca(idValue);
+			String opAsigValue = (String) value;
+			polaca(opAsigValue);
+			System.out.println("Lista de asignacion de variables: ");
+>>>>>>> Stashed changes
 		:}
 	| ID:ident OP_ASIG:valueOp CONST_STR:value
 	
@@ -475,22 +521,22 @@ asignacion
     ;
 	
 seleccion 
-    ::= SI PAR_A condicion PAR_C acciones_seleccion LLAVE_A programa LLAVE_C {: escribirGoTo(); :}
-    | SI PAR_A condicion PAR_C acciones_seleccion LLAVE_A programa LLAVE_C SINO {: insertarBi(); escribirGoToSino(); avanzar(); :} LLAVE_A programa LLAVE_C {: escribirGoToSinoEnd(); :}
+    ::= SI  PAR_A condicion PAR_C  LLAVE_A programa LLAVE_C {: escribirGoTo(); :}
+    | SI PAR_A condicion PAR_C  LLAVE_A programa LLAVE_C SINO {: insertarBi(); escribirGoToSino(); :} LLAVE_A programa LLAVE_C {: escribirGoToSinoEnd(); :}
 		{: System.out.println("Estructura if-else con condición: "); :}
     ;
 
 iteracion 
-    ::= MIENTRAS {: apilar(String.valueOf(intCodeIdx)); escribirET(); :} PAR_A condicion {: insertarCmp(); insertarBge(); avanzar(); :} PAR_C LLAVE_A programa  {: insertarBi(); escribirGoToMientras(); :} LLAVE_C 
+    ::= MIENTRAS {: escribirET(); :} PAR_A condicion PAR_C LLAVE_A programa  {: insertarBi(); escribirGoToMientras(); :} LLAVE_C 
 		{: System.out.println("Estructura while con condición: "); :}
     | FOR PAR_A asignacion PYC condicion PYC expresion PAR_C LLAVE_A programa LLAVE_C
 		{: System.out.println("Estructura for con asignación: " +", condición: " + ", y expresión: " ); :}
     ;
  
 condicion 
-    ::= comparacion 	
-    | condicion AND comparacion 
-    | condicion OR comparacion
+    ::= comparacion acciones_comparacion 	
+    | condicion AND acciones_comparacion_AND  comparacion acciones_comparacion
+    | condicion OR  acciones_comparacion_OR  comparacion  acciones_comparacion
     ;
 
 comparacion 
@@ -612,5 +658,9 @@ factor
 		{:  
 			System.out.println("Factor expresión entre paréntesis: "); :}
     ;
-acciones_seleccion
-     ::=   {: insertarCmp(); insertarBge(); avanzar(); :}; 
+acciones_comparacion
+	::=   {: insertarCmp(); insertarBge(); avanzar(); :};
+acciones_comparacion_OR
+     ::=   {: polaca("OR"); :};
+acciones_comparacion_AND     
+     ::=   {: polaca("AND"); :};

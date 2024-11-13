@@ -13,6 +13,7 @@ public class CompilerState {
 	private Iterator<String> assemblerCodeIt;
 	private int currentIndex = 0;
 	private Stack<String> operandStack;
+	private boolean comparisonPendingClose = false;
 
 	public CompilerState() {
 		symbolTable = new ArrayList<SymbolTableStruct>();
@@ -74,4 +75,13 @@ public class CompilerState {
 	public void setOperandStack(Stack<String> operandStack) {
 		this.operandStack = operandStack;
 	}
+
+	public boolean isComparisonPendingClose() {
+		return comparisonPendingClose;
+	}
+	
+	public void setComparisonPendingClose(boolean value) {
+		this.comparisonPendingClose = value;
+	}
+	
 }
