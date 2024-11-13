@@ -257,6 +257,15 @@ parser code
 		return triangulo;
 	}
 	
+	void validarTipoAsignacion(String value){
+		for(SymbolTableStruct s : cState.getSymbolTable()){
+				if(s.getNombre().equals("_".concat(value)) && s.getTipoDato() != "String"){
+					throw new IllegalArgumentException("Error: No se puede asignar un String a una variable de tipo no String");
+				}
+			}
+	
+	}
+	
 	
     
 :};
@@ -452,11 +461,12 @@ asignacion
 		:}
 	| ID:ident OP_ASIG:valueOp CONST_STR:value
 	
-		{:  String idValue = (String) ident;
-			validarVariableNoDeclarada(idValue);
-			polaca(idValue);
-		    String cteSrtValue = (String) value;
+		{:  String cteSrtValue = (String) value;
 			polaca(cteSrtValue);
+			String idValue = (String) ident;
+			validarVariableNoDeclarada(idValue);
+			//validarTipoAsignacion(idValue);
+			polaca(idValue);
 			String opAsigValue = (String) valueOp;
 			polaca(opAsigValue);
 			System.out.println("Asignacion de constante string: " ); 
