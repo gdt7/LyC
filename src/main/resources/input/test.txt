@@ -8,7 +8,7 @@ init {
     tri, tri1, tri2, tri3, tri4, tri5, p1, p2, p3, z4 , a1,b: String
 }
 
-<<<<<<< Updated upstream
+
 *- validación de cotas flotantes -*
 *- a := 99999999999.99 -*
 
@@ -32,34 +32,12 @@ b := 9
 x := 2.9 
 z := 2.909
 
-=======
->>>>>>> Stashed changes
-aInt := 3
-bInt := 5
-cInt := 7
-dInt := 9
 
-si (aInt > bInt)
-{
-    escribir("a es mas grande que b")
-}
-sino
-{
-<<<<<<< Updated upstream
-    escribir("a es mas chico o igual a b")
-}
-
-
-=======
-    leer(f)
-}
-
->>>>>>> Stashed changes
 
 mientras (aInt > bInt)
 {
     escribir("a es mas grande que b")
-<<<<<<< Updated upstream
+
     aInt := aInt + 1
     leer(f)
 }
@@ -92,7 +70,4 @@ x := getPenultimatePosition([3, 8.2, 2, 55.5, 6, 7.8, 3 ,68, 9.0])
 *- Ejemplo de funcion getPenultimatePosition con error -*
 *- x := getPenultimatePosition([3, 8.2, 2, 55.5) -*
 *- x := getPenultimatePosition([3, 8.2, 2, 55.5,b]) -*
-=======
 
-}
->>>>>>> Stashed changes

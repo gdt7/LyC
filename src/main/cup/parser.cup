@@ -482,7 +482,7 @@ salida
     ;
 	
 asignacion 
-<<<<<<< Updated upstream
+
     ::= ID:ident OP_ASIG:value {: pos = obtenerPosicion();  :} expresion 
 		{: 	
 				float res = resolverExpresion(pos);
@@ -494,16 +494,6 @@ asignacion
 
 				table.put(idValue, res);
 				System.out.println("Lista de asignacion de variables: ");
-					
-=======
-    ::= ID:ident OP_ASIG:value expresion 
-		{: 	String idValue = (String) ident;
-			validarVariableNoDeclarada(idValue);
-			polaca(idValue);
-			String opAsigValue = (String) value;
-			polaca(opAsigValue);
-			System.out.println("Lista de asignacion de variables: ");
->>>>>>> Stashed changes
 		:}
 	| ID:ident OP_ASIG:valueOp CONST_STR:value
 	
