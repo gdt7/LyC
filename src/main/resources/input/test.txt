@@ -1,12 +1,11 @@
 *- soy un comentario -*
 
 init {
-    a, b1 , h1,tri,tri2: Float
+    a, b1 , h1: Float
     *- x,a1 : Float -*
     variable1,x, z ,aInt,bInt,cInt,dInt : Int
-    p1, p2, p3, z4 , a1,b: String
     *-validacion de duplicacion de variable -*
-    *- z : String-*
+    tri, tri1, tri2, tri3, tri4, tri5, p1, p2, p3, z4 , a1,b: String
 }
 
 *- validación de cotas flotantes -*
@@ -24,11 +23,13 @@ a := .9999
 *- b := "asdaadadasdadasdadasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd" -*
 b := "@sdADaSjfla%dfg"
 b := "asldk  fh sjf"
+b := 9
 
 *- error carácter invalido -*
 *- c := ʉ -*
 
-*- x := 2 -*
+x := 2.9 
+z := 2.909
 
 aInt := 3
 bInt := 5
@@ -107,9 +108,22 @@ mientras (aInt > bInt)
     aInt := aInt + 1
 }
 
-tri := triangulo(3,a,b)
+tri := "isosceles"
+tri := "escaleno"
+tri := "equilatero"
 
-tri2 := triangulo(3/x,z+4,b*26)
+aInt := 1.90 + 2
+
+bInt := 8 + 9
+
+cInt := 2 + 4
+
+tri1 := triangulo(aInt + 1, bInt, cInt + 2 + 2)
+tri2 := triangulo(aInt, 12, 4/2)
+tri3 := triangulo(3+5,6+2,3 - 1 * (9 - 3)) 
+tri4 := triangulo(3,6+2,9)
+tri5 := triangulo(aInt,aInt,aInt)
+
 
 x := getPenultimatePosition([3, 8.2, 2, 55.5, 6, 7.8, 3 ,68, 9.0])
 

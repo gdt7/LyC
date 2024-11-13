@@ -11,6 +11,10 @@ import lyc.compiler.model.IdentifierNotDeclaredException;
 import lyc.compiler.files.FileOutputWriter;
 import lyc.compiler.files.AsmCodeGenerator;
 import lyc.compiler.model.CompilerState;
+import java.util.Map;
+import java.util.HashMap; // si también necesitas HashMap
+
+
 
 
 class Parser;
@@ -19,10 +23,13 @@ parser code
 {:
 
 	public CompilerState cState;
-	
+	 //private Map<String, Integer> table;
+	 private Map<String, Float> table = new HashMap<>();
+
 	String myVal;
   // Lista para almacenar el código intermedio
   	 int intCodeIdx = 0;
+	 float pos, e1, e2,e3;
      public List<String> intermediateCode = new ArrayList<>();
      public Stack<String> stack = new Stack<>(); // La pila para almacenar IDs y valores
 	 public Stack<String> idsStack = new Stack<>();
@@ -151,7 +158,107 @@ parser code
         }
         pilaVariablesDeclaradas.push(variable);
 	}
-  
+	
+	public int obtenerPosicion() {
+    // Devuelve 0 si la lista está vacía
+    if (intermediateCode.isEmpty()) {
+        return 0;
+    }
+    // Si no está vacía, devuelve el índice del último elemento
+    return intermediateCode.size() - 1;
+}
+
+	
+	
+	public float resolverExpresion(float pos) {
+	
+	float indiceEt = pos;
+        if (indiceEt == -1) {
+            throw new IllegalArgumentException("No se encontró o no hay expresión");
+        }
+
+		int inicio = (indiceEt == 0) ? 0 : (int)(indiceEt + 1);
+		List<String> expresion = intermediateCode.subList(inicio, intermediateCode.size());
+
+        // Utiliza una pila para evaluar la expresión en notación postfija
+        Stack<Float> pila = new Stack<>();
+        
+		for (String token : expresion) {
+			if (esOperador(token)) {
+				// Si es un operador, toma los dos últimos valores de la pila
+				float operando2 = pila.pop();
+				float operando1 = pila.pop();
+				float resultado = aplicarOperador(token, operando1, operando2);
+				pila.push(resultado);
+				//System.out.println("RES: " + resultado);
+			} else {
+				// Intentamos convertir el token a un número flotante
+				try {
+					float valorNumerico = Float.parseFloat(token);
+					pila.push(valorNumerico);
+
+				} catch (NumberFormatException e) {
+					 if (token.startsWith("\"") && token.endsWith("\"")) {
+							// Token es una cadena entre comillas, no hacemos nada
+							continue;
+					}
+					// Si no es un número, asumimos que es una variable y buscamos su valor en el Map
+					if (table.containsKey(token)) {
+						float valorVariable = table.get(token);
+						pila.push(valorVariable);
+
+					} else {
+						//System.out.println("Error: La variable " + token + " no está definida en el Map.");
+						throw new IllegalArgumentException("Variable " + token + " no definida");
+					}
+				}
+			}
+		}
+        
+        // El resultado final debe estar en la cima de la pila
+		Float res = pila.pop();
+        return res;
+    }
+	
+	 private static boolean esOperador(String token) {
+        return "+".equals(token) || "-".equals(token) || "*".equals(token) || "/".equals(token);
+    }
+
+		private float aplicarOperador(String operador, float operando1, float operando2) {
+		switch (operador) {
+			case "+":
+				return operando1 + operando2;
+			case "-":
+				return operando1 - operando2;
+			case "*":
+				return operando1 * operando2;
+			case "/":
+				return operando1 / operando2;
+			default:
+				throw new IllegalArgumentException("Operador desconocido: " + operador);
+		}
+	}
+
+	
+	public static String tipoTriangulo(double lado1, double lado2, double lado3) {
+	
+	String triangulo;
+	
+    if (lado1 == lado2 && lado2 == lado3) {
+			triangulo = "\"equilátero\"";
+			//return "equilátero";
+		} else if (lado1 == lado2 || lado1 == lado3 || lado2 == lado3) {
+			triangulo = "\"isosceles\"";
+			//return "isosceles";
+		} else {
+			triangulo = "\"escaleno\"";
+			//return "escaleno";
+		}
+		return triangulo;
+	}
+	
+	
+    
 :};
 
 // Terminals
@@ -330,15 +437,31 @@ salida
     ;
 	
 asignacion 
-    ::= ID:ident OP_ASIG:value expresion 
-		{: 	String idValue = (String) ident;
+    ::= ID:ident OP_ASIG:value {: pos = obtenerPosicion();  :} expresion 
+		{: 	
+				float res = resolverExpresion(pos);
+				String idValue = (String) ident;
+				validarVariableNoDeclarada(idValue);
+				polaca(idValue);
+				String opAsigValue = (String) value;
+				polaca(opAsigValue);
+
+				table.put(idValue, res);
+				System.out.println("Lista de asignacion de variables: ");
+					
+		:}
+	| ID:ident OP_ASIG:valueOp CONST_STR:value
+	
+		{:  String idValue = (String) ident;
 			validarVariableNoDeclarada(idValue);
 			polaca(idValue);
-			String opAsigValue = (String) value;
+		    String cteSrtValue = (String) value;
+			polaca(cteSrtValue);
+			String opAsigValue = (String) valueOp;
 			polaca(opAsigValue);
-			System.out.println("Lista de asignacion de variables: ");
-			
+			System.out.println("Asignacion de constante string: " ); 
 		:}
+	
     ;
 	
 seleccion 
@@ -410,12 +533,13 @@ funcion
 		{: 	myVal = desapilar();
 			myVal = desapilar();
 			polaca(myVal);
-			System.out.println("Funcion especial : "); :}
-	| 	TRIANGULO PAR_A expresion COMA expresion COMA expresion PAR_C
+			System.out.println("Funcion especial GETPENULTIMATEPOSITION: "); :}
+	| 	TRIANGULO PAR_A {: pos = obtenerPosicion(); :} expresion {: e1 = resolverExpresion(pos); :} COMA {: pos = obtenerPosicion(); :} expresion {: e2 = resolverExpresion(pos); :} COMA {: pos = obtenerPosicion(); :} expresion {: e3 = resolverExpresion(pos); :} PAR_C
 		{: 
-			/***COMPLETAR***/
-			
-			System.out.println("Funcion especial: "); :}
+			String triangulo = tipoTriangulo(e1,e2,e3);
+			polaca(triangulo);
+
+			System.out.println("Funcion especial TRANGULO: "); :}
 	;
 
 listaconst
@@ -473,12 +597,7 @@ factor
 			System.out.println("Factor constante flotante: " ); 
 		
 		:}
-	| CONST_STR:value
-		{:  
-		    String cteSrtValue = (String) value;
-			polaca(cteSrtValue);
-			System.out.println("Factor constante string: " ); 
-		:}
+	
     | PAR_A expresion PAR_C
 		{:  
 			System.out.println("Factor expresión entre paréntesis: "); :}
