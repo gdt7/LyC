@@ -84,28 +84,12 @@ sino
 }
 
 
-*- condicion if anidado y sentencia leer-*
-
-si (aInt > bInt)
-{
-     si (cInt > dInt)
-	{
-    	escribir("a es mas grande que b")
-	    escribir("c es mas grande que d")
-	}
-
-
-}
-sino
-{
-    leer(f)
-}
-
 
 mientras (aInt > bInt)
 {
     escribir("a es mas grande que b")
     aInt := aInt + 1
+    leer(f)
 }
 
 tri := "isosceles"
