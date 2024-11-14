@@ -242,7 +242,7 @@ parser code
 
 					} else {
 						//System.out.println("Error: La variable " + token + " no está definida en el Map.");
-						throw new IllegalArgumentException("Variable " + token + " no definida");
+						throw new IllegalArgumentException("Variable " + token + " no inicializada");
 					}
 				}
 			}
@@ -290,14 +290,23 @@ parser code
 		return triangulo;
 	}
 	
-	void validarTipoAsignacion(String value){
-		for(SymbolTableStruct s : cState.getSymbolTable()){
-				if(s.getNombre().equals("_".concat(value)) && s.getTipoDato() != "String"){
-					throw new IllegalArgumentException("Error: No se puede asignar un String a una variable de tipo no String");
+	void validarTipoAsignacion(String variable, String tipoAsignacion) {
+	System.out.println("variable: " + variable + " tipoAsignacion: " + tipoAsignacion.toUpperCase());
+	tipoAsignacion = tipoAsignacion.toUpperCase();
+		for (SymbolTableStruct simbolo : cState.getSymbolTable()) {
+			if (simbolo.getNombre().equals("_".concat(variable))) {
+				String tipoVariable = simbolo.getTipoDato();
+				if (!tipoVariable.equals(tipoAsignacion)) {
+					throw new IllegalArgumentException("Error: No se puede asignar un valor de tipo '" 
+						+ tipoAsignacion + "' a la variable '" + variable + "' de tipo '" + tipoVariable + "'.");
 				}
+				break; // La variable ha sido encontrada, salir del bucle
 			}
-	
+		}
 	}
+	
+	
+
 	
 	
     
@@ -487,6 +496,7 @@ asignacion
 		{: 	
 				float res = resolverExpresion(pos);
 				String idValue = (String) ident;
+				//validarTipoAsignacion(idValue,"Float");
 				validarVariableNoDeclarada(idValue);
 				polaca(idValue);
 				String opAsigValue = (String) value;
@@ -501,7 +511,7 @@ asignacion
 			polaca(cteSrtValue);
 			String idValue = (String) ident;
 			validarVariableNoDeclarada(idValue);
-			//validarTipoAsignacion(idValue);
+			validarTipoAsignacion(idValue,"String");
 			polaca(idValue);
 			String opAsigValue = (String) valueOp;
 			polaca(opAsigValue);

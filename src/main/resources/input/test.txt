@@ -5,9 +5,12 @@ init {
     *- x,a1 : Float -*
     variable1,x, z ,aInt,bInt,cInt,dInt : Int
     *-validacion de duplicacion de variable -*
-    tri, tri1, tri2, tri3, tri4, tri5, p1, p2, p3, z4 , a1,b: String
+    tri, tri1, tri2, tri3, tri4, tri5, p1, p2, p3, z4 , a1,bStr,b: String
 }
 
+*- validación de tipos de dato en asignacion -*
+*-a := "hola"-*
+bStr := "hola"
 
 *- validación de cotas flotantes -*
 *- a := 99999999999.99 -*
@@ -32,7 +35,7 @@ b := 9
 x := 2.9 
 z := 2.909
 
-
+aInt := 1.9
 
 mientras (aInt > bInt)
 {
@@ -70,4 +73,3 @@ x := getPenultimatePosition([3, 8.2, 2, 55.5, 6, 7.8, 3 ,68, 9.0])
 *- Ejemplo de funcion getPenultimatePosition con error -*
 *- x := getPenultimatePosition([3, 8.2, 2, 55.5) -*
 *- x := getPenultimatePosition([3, 8.2, 2, 55.5,b]) -*
-
