@@ -37,6 +37,17 @@ parser code
 	 public Stack<String> pilaVariablesDeclaradas = new Stack<>();
 	 public Stack<String> pilaGoTo = new Stack<>();
 	 
+	 private static final Map<String, String> operadorCmpPolaca = Map.of(
+			">=","BLT", 
+			">","BLE",  
+			"<=","BGT", 
+			"<","BGE",
+			"<>","BEQ",
+			"==","BNE"
+	);
+	 
+	 
+	 
   public List<String> getIntermediateCode() {
     return intermediateCode;
   }
@@ -60,19 +71,13 @@ parser code
   public void insertarBi(){
   	 polaca("BI");
   } 	
-
-  public void insertarBge(String value){
-  	//BUSCAR EN LAS CONSTANTES Y PONER EL CODIGO BGE;BLE;ETC
-  	//REEMPLAZAR ESTO POR EL CODIGO BGE
-
-  	 polaca(value);
-  } 
   
   public void insertarBge(){
   	 String value = desapilar();
   	//BUSCAR EN LAS CONSTANTES Y PONER EL CODIGO BGE;BLE;ETC
   	//REEMPLAZAR ESTO POR EL CODIGO BGE
-  	 polaca(value);
+  	 
+  	 polaca(operadorCmpPolaca.get(value));
   } 
   
   public void avanzar(){
@@ -89,8 +94,8 @@ parser code
 	  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx));
 	  	value = desapilarGoTo();  	
   	}
-  	apilarGoTo(String.valueOf(intCodeIdx));
-  	polaca("GOTO");
+  	//apilarGoTo(String.valueOf(intCodeIdx));
+  	//polaca("GOTO");
   	
   }
   
@@ -107,15 +112,13 @@ parser code
   public void escribirGoToSinoEnd(){
   	String value = desapilarGoTo();
   	System.out.println("Desapilo en goToSinoEnd: " + value);
-  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx + 1));
+  	intermediateCode.set(Integer.valueOf(value),String.valueOf(intCodeIdx));
   }
   
   public void escribirET(){
   	apilarGoTo(String.valueOf(intCodeIdx));
   	polaca("ET");
   }
-  
- 
   
   
   public void escribirGoToMientras(){

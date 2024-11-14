@@ -1,16 +1,17 @@
 *- soy un comentario -*
 
 init {
-    a, b1 , h1: Float
+    a, b1 , h1,tri,tri2: Float
     *- x,a1 : Float -*
     variable1,x, z ,aInt,bInt,cInt,dInt : Int
+    p1, p2, p3, z4 , a1,b: String
     *-validacion de duplicacion de variable -*
-    tri, tri1, tri2, tri3, tri4, tri5, p1, p2, p3, z4 , a1,bStr,b: String
+    *-tri, tri1, tri2, tri3, tri4, tri5, p1, p2, p3, z4 , a1,bStr,b: String-*
 }
 
 *- validación de tipos de dato en asignacion -*
 *-a := "hola"-*
-bStr := "hola"
+*-bStr := "hola"-*
 
 *- validación de cotas flotantes -*
 *- a := 99999999999.99 -*
@@ -39,27 +40,18 @@ aInt := 1.9
 
 mientras (aInt > bInt)
 {
-    escribir("a es mas grande que b")
-
-    aInt := aInt + 1
-    leer(f)
+	escribir( "a es mas grande que b" )
 }
 
-tri := "isosceles"
-tri := "escaleno"
-tri := "equilatero"
+si(aInt > bInt OR cInt > dInt)
+{
+	   escribir("a es mas grande que b")
+}
+sino
+{
+	  escribir("b es mas grande que a")
+}
 
-aInt := 1.90 + 2
-
-bInt := 8 + 9
-
-cInt := 2 + 4
-
-tri1 := triangulo(aInt + 1, bInt, cInt + 2 + 2)
-tri2 := triangulo(aInt, 12, 4/2)
-tri3 := triangulo(3+5,6+2,3 - 1 * (9 - 3)) 
-tri4 := triangulo(3,6+2,9)
-tri5 := triangulo(aInt,aInt,aInt)
 
 
 x := getPenultimatePosition([3, 8.2, 2, 55.5, 6, 7.8, 3 ,68, 9.0])
@@ -73,3 +65,4 @@ x := getPenultimatePosition([3, 8.2, 2, 55.5, 6, 7.8, 3 ,68, 9.0])
 *- Ejemplo de funcion getPenultimatePosition con error -*
 *- x := getPenultimatePosition([3, 8.2, 2, 55.5) -*
 *- x := getPenultimatePosition([3, 8.2, 2, 55.5,b]) -*
+

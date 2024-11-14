@@ -13,7 +13,7 @@ public class AssignmentGenerator extends AssemblerGenerator{
 
 	@Override
 	public StringBuilder generate() throws IOException {
-		System.out.println("assignment generate");
+		System.out.println("assignment generator");
 		CompilerState cState = CompilerImpl.getInstance().getCompilerState();
 		String res = "";
 		if(cState.getOperandStack().size() >= 2) {

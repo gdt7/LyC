@@ -1,13 +1,28 @@
 package lyc.compiler.assemblerGenerator;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import lyc.compiler.main.CompilerImpl;
 import lyc.compiler.model.CompilerState;
 import lyc.compiler.util.AssemblerStringAnalizer;
 
-public class WhileGenerator extends AssemblerGenerator{
+public class WhileGenerator extends AssemblerGenerator {
+
+	private static final List<String> logicalOperators = Arrays.asList("AND", "OR", "NOT");
+	private static final Map<String, String> polacaToAssemblerJmp = Map.of("BLT", "JB", "BLE", "JNA", "BGT", "JA",
+			"BGE", "JAE", "BEQ", "JE", "BNE", "JNE");
+	private static final Map<String, String> polacaToAssemblerReverseJmp = Map.of(
+			"JB","JAE",
+			"JNA","JA",
+			"JA","JNA",
+			"JAE","JB",
+			"JE","JNE",
+			"JNE","JE"
+			);
 
 	public WhileGenerator() {
 		super();
@@ -21,44 +36,84 @@ public class WhileGenerator extends AssemblerGenerator{
 		System.out.println("while generator");
 		StringBuilder ret = new StringBuilder();
 		CompilerState cState = CompilerImpl.getInstance().getCompilerState();
-		String str1 = cState.getAssemblerCodeIt().next();
+		String var1 = cState.getAssemblerCodeIt().next();
 		cState.increaseIndex();
-		String str2 = cState.getAssemblerCodeIt().next();
+		String var2 = cState.getAssemblerCodeIt().next();
 		cState.increaseIndex();
-		
-//		cState.setComparisonPendingClose(true);
-//		if(cState.getOperandStack().size() >= 2) {
-//			String var1 = cState.getOperandStack().pop();
-//			String var2 = cState.getOperandStack().pop();
-//			String comparisonType = cState.getAssemblerCodeIt().next();
-//			cState.increaseIndex();
-//			String endIndex = cState.getAssemblerCodeIt().next();
-//			int currentIndex = cState.increaseIndex();
-//			ret = new StringBuilder("FLD " + var1 + " \n ");
-//			ret = ret.append(" FCOMP ").append(var2);
-//			ret = ret.append(" \n fstsw ax \n sahf \n ");
-////		//SEGUN EL COMPARISON TYPE TENGO QUE VER QUE JUMP HAGO
-//			ret = ret.append(getJumpByComparisonType(comparisonType));
-////		//HACER ETIQUETAS DINAMICAS DE ALGUNA FORMA
-//			ret = ret.append(" et_final \n ");
-//			int count = 0;
-//			while(currentIndex < Integer.valueOf(endIndex)) {
-//				System.out.println(count++);
-//				ret = ret.append(AssemblerStringAnalizer.analizeString(new StringBuilder()));
-//				currentIndex = cState.getCurrentIndex();
-//			}
-//			ret = ret.append(" et_final \n ");
-//			System.out.println("pase while selection");
-//			//TENDRIA QUE LEER HASTA QUE APAREZCA DE NUEVO UN OPERANDO QUE MARQUE EL FIN DEL WHILE 
-//			ret.append("");			
-//		}
-		return ret;
+		cState.getAssemblerCodeIt().next();
+		cState.increaseIndex();
+		String comparisonType = cState.getAssemblerCodeIt().next();
+		cState.increaseIndex();
+		System.out.println("comparison type : " + comparisonType);
+		String endIndex = cState.getAssemblerCodeIt().next();
+		cState.increaseIndex();
+		int currentIndex = cState.getCurrentIndex();
+		// HACER ETIQUETAS DINAMICAS
+		String etiqBeginWhile = "etiqWhile";
+		ret = new StringBuilder(etiqBeginWhile + ": \n FLD " + var1 + " \n ");
+		ret = ret.append(" FCOM ").append(var2);
+		ret = ret.append(" \n fstsw ax \n sahf \n ");
+		// SEGUN EL COMPARISON TYPE TENGO QUE VER QUE JUMP HAGO
+		String possibleLogicalOperator = cState.getAssemblerCodeIt().next();
+		cState.setCurrentIndex(cState.getCurrentIndex() + 1);
+		String jmp = polacaToAssemblerJmp.get(comparisonType);
+		// HACER ETIQUETAS DINAMICAS DE ALGUNA FORMA
+		if (logicalOperators.contains(possibleLogicalOperator)) {
+			switch (possibleLogicalOperator) {
+			case "AND":
+				ret = ret.append(jmp);
+				ret = ret.append(" et_final ");
+				break;
+			case "OR":
+				ret = ret.append(reverseJump(jmp));
+				ret = ret.append(" et_bloque ");
+				break;
+			case "NOT":
+//					ret = ret.append(getJumpByComparisonType(comparisonType));
+				break;
+			}
+			// TODO : ESTA SECCION CON EL NOT VARIA; HACERLO
+			String firstOperand = cState.getAssemblerCodeIt().next();
+			cState.increaseIndex();
+			String secondOperand = cState.getAssemblerCodeIt().next();
+			cState.increaseIndex();
+			cState.getAssemblerCodeIt().next();
+			cState.increaseIndex();
+			comparisonType = cState.getAssemblerCodeIt().next();
+			cState.increaseIndex();
+			ret = ret.append("\n FLD " + firstOperand + " \n ").append(" FCOM ").append(secondOperand);
+			ret = ret.append(" \n fstsw ax \n sahf \n ");
+			ret.append(polacaToAssemblerJmp.get(comparisonType));
+			// HACER ETIQUETAS DINAMICAS DE ALGUNA FORMA
+			ret.append(" et_final \n");
+		} else {
+			System.out.println("not logical operator");
+			ret = ret.append(jmp);
+			ret = ret.append(" et_final \n ");
+			cState.getOperandStack().push(possibleLogicalOperator);
+		}
+		ret.append(":et_bloque \n");
+		System.out.println("currentIndex : " + currentIndex);
+		System.out.println("endIndex : " + endIndex);
+		while ((currentIndex + 3) < Integer.valueOf(endIndex)) {
+			System.out.println("currentIndex : " + currentIndex);
+			ret = ret.append(AssemblerStringAnalizer.analizeString(new StringBuilder()));
+			currentIndex = cState.getCurrentIndex();
+		}
+		System.out.println("sali del loop");
+		cState.getAssemblerCodeIt().next();
+		cState.increaseIndex();
+		cState.getAssemblerCodeIt().next();
+		cState.increaseIndex();
+		ret = ret.append("JMP " + etiqBeginWhile + ": \n");
+		ret = ret.append(":et_final \n ");
+
+	return ret;
+
 	}
 
-
-	//HACER FUNCION DE CONVERSION
-	private String getJumpByComparisonType(String comparisonType) {
-		return "JMP " + comparisonType;
+	private String reverseJump(String s) {
+		return polacaToAssemblerReverseJmp.get(s);
 	}
 
 }

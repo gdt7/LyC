@@ -23,7 +23,7 @@ public class AsmCodeGenerator implements FileGenerator {
 
 	@Override
 	public void generate(FileWriter fileWriter) throws IOException {
-//		try {
+		try {
 			printAssemblerInitialCode(fileWriter);
 			StringBuilder code = new StringBuilder();
 			cState.setAssemblerCodeIt(cState.getIntermediateCode().iterator());
@@ -34,9 +34,9 @@ public class AsmCodeGenerator implements FileGenerator {
 			printCodeHeaderSection(fileWriter);
 			fileWriter.write(code.toString());
 			printCodeFooterSection(fileWriter);
-//		}catch(Exception ex) {
-//			System.out.println(ex);
-//		}
+		}catch(Exception ex) {
+			System.out.println(ex);
+		}
 	}
 
 	private void printCodeHeaderSection(FileWriter fileWriter) throws IOException {

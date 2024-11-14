@@ -16,7 +16,7 @@ public class ReadGenerator extends AssemblerGenerator{
 
 	@Override
 	public StringBuilder generate() throws IOException {
-		System.out.println("Write generator");
+		System.out.println("Read generator");
 		CompilerState cState = CompilerImpl.getInstance().getCompilerState();
 		String res = "";
 		
@@ -25,7 +25,7 @@ public class ReadGenerator extends AssemblerGenerator{
 		//HACER CODIGO READ
 		
 		//HACER CODIGO WRITE
-		res = "write " + str1 + "\n";
+		res = "read " + str1 + "\n";
 		
 		return new StringBuilder(res);
 	}

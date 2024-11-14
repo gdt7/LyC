@@ -18,6 +18,7 @@ public class AdditionGenerator extends AssemblerGenerator{
 
 	@Override
 	public StringBuilder generate() throws IOException {
+		System.out.println("addition generator");
 		CompilerState cState = CompilerImpl.getInstance().getCompilerState();
 		String res = "";
 		String str2  = cState.getOperandStack().pop();
