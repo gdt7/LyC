@@ -39,13 +39,33 @@ public class AsmCodeGenerator implements FileGenerator {
 		}
 	}
 
+	/*private void printCodeHeaderSection(FileWriter fileWriter) throws IOException {
+		fileWriter.write(".CODE \n MAIN \n MOV AX,@DATA \n MOV DS,AX \n MOV ES,AX \n");
+	}*/
+
 	private void printCodeHeaderSection(FileWriter fileWriter) throws IOException {
-		fileWriter.write(".CODE \n MOV AX.@DATA \n MOV DS,AX \n MOV es,ax \n");
+		//fileWriter.write(".MODEL LARGE\n");  // Agregamos la directiva .MODEL para TASM
+		//fileWriter.write(".STACK 200h\n");   // Establece el tamaño de la pila
+		//fileWriter.write(".DATA\n");          // Definimos la sección de datos
+		//fileWriter.write("    ; Aquí puedes agregar datos si es necesario\n"); // Comentario para sección de datos
+		fileWriter.write(".CODE\n");          // Inicia la sección de código
+		fileWriter.write("MAIN:\n");          // Define el punto de entrada MAIN
+		fileWriter.write("    MOV AX, @DATA\n");  // Cargar el segmento de datos en AX
+		fileWriter.write("    MOV DS, AX\n");     // Mover AX a DS (registro de segmento de datos)
+		fileWriter.write("    MOV ES, AX\n");     // Mover AX a ES (registro de segmento extra)
 	}
+	
+
+	/*private void printCodeFooterSection(FileWriter fileWriter) throws IOException {
+		fileWriter.write("mov ax,4c00h \n Int 21h \n END MAIN");
+	}*/
 
 	private void printCodeFooterSection(FileWriter fileWriter) throws IOException {
-		fileWriter.write("mov ax,4c00h \n Int 21h \n End");
+		fileWriter.write("    MOV AX, 4C00h\n");  // Código de interrupción para terminar el programa
+		fileWriter.write("    INT 21h\n");         // Llamada al sistema para finalizar el programa
+		fileWriter.write("END MAIN\n");            // Define el final del código y el punto de entrada
 	}
+	
 
 	private String printVariableDeclaration(FileWriter fileWriter, CompilerState cState) throws IOException {
 		String ret = "";
@@ -96,7 +116,11 @@ public class AsmCodeGenerator implements FileGenerator {
 	}
 
 	private void printAssemblerInitialCode(FileWriter fileWriter) throws IOException {
-		fileWriter.write(".MODEL LARGE \n .386 \n Stack 200h \n .DATA \n ");
+		//fileWriter.write(".MODEL LARGE \n .386 \n Stack 200h \n .DATA \n ");
+		fileWriter.write(".MODEL LARGE\n");  // Agregamos la directiva .MODEL para TASM
+		fileWriter.write(".STACK 200h\n");   // Establece el tamaño de la pila
+		fileWriter.write(".DATA\n");          // Definimos la sección de datos
+		fileWriter.write("    ; Aquí puedes agregar datos si es necesario\n"); // Comentario para sección de datos
 	}
 
 	
