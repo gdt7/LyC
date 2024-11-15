@@ -44,10 +44,6 @@ public class AsmCodeGenerator implements FileGenerator {
 	}*/
 
 	private void printCodeHeaderSection(FileWriter fileWriter) throws IOException {
-		//fileWriter.write(".MODEL LARGE\n");  // Agregamos la directiva .MODEL para TASM
-		//fileWriter.write(".STACK 200h\n");   // Establece el tamaño de la pila
-		//fileWriter.write(".DATA\n");          // Definimos la sección de datos
-		//fileWriter.write("    ; Aquí puedes agregar datos si es necesario\n"); // Comentario para sección de datos
 		fileWriter.write(".CODE\n");          // Inicia la sección de código
 		fileWriter.write("MAIN:\n");          // Define el punto de entrada MAIN
 		fileWriter.write("    MOV AX, @DATA\n");  // Cargar el segmento de datos en AX

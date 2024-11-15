@@ -25,9 +25,9 @@ public class AdditionGenerator extends AssemblerGenerator{
 		String str1 = cState.getOperandStack().pop();
 		
 		String auxName = getAuxiliaryVariableName(cState.getAssemblerVariables());
-		res.concat("MOV R1," + str1);
-		res.concat("ADD R1," + str2);
-		res.concat("MOV ".concat(auxName).concat(",R1"));
+		res.concat("MOV r1," + str1);
+		res.concat("ADD r1," + str2);
+		res.concat("MOV ".concat(auxName).concat(",r1"));
 		
 		cState.getOperandStack().push(auxName);
 		
