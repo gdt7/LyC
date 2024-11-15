@@ -14,6 +14,7 @@ public class CompilerState {
 	private int currentIndex = 0;
 	private Stack<String> operandStack;
 	private boolean comparisonPendingClose = false;
+	private int etiqCount = 0;
 
 	public CompilerState() {
 		symbolTable = new ArrayList<SymbolTableStruct>();
@@ -82,6 +83,19 @@ public class CompilerState {
 	
 	public void setComparisonPendingClose(boolean value) {
 		this.comparisonPendingClose = value;
+	}
+
+	public int getEtiqCount() {
+		return etiqCount;
+	}
+
+	public void setEtiqCount(int etiqCount) {
+		this.etiqCount = etiqCount;
+	}
+	
+	public int increaseEtiqCount() {
+		this.etiqCount++;
+		return etiqCount;
 	}
 	
 }

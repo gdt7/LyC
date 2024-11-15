@@ -19,12 +19,6 @@ public class AssemblerGeneratorFactory {
 
 	public static AssemblerGenerator create(String s) {
 		AssemblerGenerator ag = switch (s) {
-		case ">": {
-			yield new BiggerGenerator();
-		}
-		case "<": {
-			yield new LessThanGenerator();
-		}
 		case "+":{
 			yield new AdditionGenerator();
 		}
@@ -36,12 +30,6 @@ public class AssemblerGeneratorFactory {
 		}
 		case "/":{
 			yield new DivisionGenerator();
-		}
-		case ">=" : {
-			yield new BiggerEqualThanGenerator();
-		}
-		case "<=" : {
-			yield new LesserEqualThanGenerator();
 		}
 		case ":=" : {
 			yield new AssignmentGenerator();

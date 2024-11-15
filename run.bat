@@ -17,7 +17,7 @@ cd target\asm
 
 REM Inicia DOSBox para compilar y enlazar el archivo final.asm
 echo Compilando y enlazando final.asm con DOSBox...
-"C:\Program Files (x86)\DOSBox-0.74-3\DOSBox.exe" -c "mount c .\target\asm" -c "c:" -c "tasm final.asm" -c "if errorlevel 1 echo Error en compilacion con TASM" -c "tlink final.obj" -c "if errorlevel 1 echo Error en enlace con TLINK" -c "exit"
+"D:\Programs\DOSBox-0.74-3\DOSBox.exe" -c "mount c .\target\asm" -c "c:" -c "tasm final.asm" -c "if errorlevel 1 echo Error en compilacion con TASM" -c "tlink final.obj" -c "if errorlevel 1 echo Error en enlace con TLINK" -c "exit"
 
 REM Verifica si se generó el archivo ejecutable
 IF NOT EXIST "final.exe" (

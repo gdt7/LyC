@@ -57,16 +57,18 @@ public class SelectionGenerator extends AssemblerGenerator {
 			String possibleLogicalOperator = cState.getAssemblerCodeIt().next();
 			cState.setCurrentIndex(cState.getCurrentIndex() + 1);
 			String jmp = polacaToAssemblerJmp.get(comparisonType);
+			String etiqFinal = "et_final_" + cState.getEtiqCount();
+			cState.increaseEtiqCount();
+			String etiqbloque = "etiq_bloque_" + cState.getEtiqCount();
+			cState.increaseEtiqCount();
 			//HACER ETIQUETAS DINAMICAS DE ALGUNA FORMA
 			if (logicalOperators.contains(possibleLogicalOperator)) {
 				switch (possibleLogicalOperator) {
 				case "AND":
-					ret = ret.append(jmp);
-					ret = ret.append(" et_final ");
+					ret = ret.append(jmp + " " + etiqFinal);
 					break;
 				case "OR":
-					ret = ret.append(reverseJump(jmp));
-					ret = ret.append(" et_bloque ");
+					ret = ret.append(reverseJump(jmp) + " " + etiqbloque);
 					break;
 				case "NOT":
 //					ret = ret.append(getJumpByComparisonType(comparisonType));
@@ -84,21 +86,19 @@ public class SelectionGenerator extends AssemblerGenerator {
 				cState.increaseIndex();
 				ret = ret.append("\n FLD " + firstOperand + " \n ").append(" FCOM ").append(secondOperand);
 				ret = ret.append(" \n fstsw ax \n sahf \n ");
-				ret.append(polacaToAssemblerJmp.get(comparisonType));
-				//HACER ETIQUETAS DINAMICAS DE ALGUNA FORMA
-				ret.append(" et_final \n");
+				ret.append(polacaToAssemblerJmp.get(comparisonType)).append(" " + etiqFinal + "\n");
 			}else {
 				ret = ret.append(jmp);
-				ret = ret.append(" et_final ");
+				ret = ret.append(etiqFinal);
 				cState.getOperandStack().push(possibleLogicalOperator);
 			}
 			
-			ret.append("\n :et_bloque \n");
+			ret.append("\n " + etiqbloque + ": \n");
 			while (currentIndex < Integer.valueOf(endIndex)) {
 				ret = ret.append(AssemblerStringAnalizer.analizeString(new StringBuilder()));
 				currentIndex = cState.getCurrentIndex();
 			}
-			ret = ret.append(":et_final \n ");
+			ret = ret.append( etiqFinal + ": \n ");
 			
 			
 		}

@@ -18,13 +18,13 @@ public class AssignmentGenerator extends AssemblerGenerator{
 		String res = "";
 		if(cState.getOperandStack().size() >= 2) {
 			String str2 = cState.getOperandStack().pop();
-			String str1 = cState.getOperandStack().pop();
-			
+			String str1 = cState.getOperandStack().pop();			
 			System.out.println(str2);
 			System.out.println(str1);
 			
             res = "MOV r1, " + str1 + "\n";
 			res = res.concat("MOV ".concat(str2).concat(" , ").concat("r1").concat("\n"));			
+
 		}
 		return new StringBuilder(res);
 	}
