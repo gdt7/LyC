@@ -20,7 +20,7 @@ echo Compilando y enlazando final.asm con DOSBox...
 "C:\Program Files (x86)\DOSBox-0.74-3\DOSBox.exe" -c "mount c .\target\asm" -c "c:" -c "cd TASM" -c "tasm final.asm" -c "if errorlevel 1 echo Error en compilacion con TASM" -c "tlink final.obj" -c "if errorlevel 1 echo Error en enlace con TLINK" -c "exit"
 
 REM Verifica si se generó el archivo ejecutable en el subdirectorio TASM
-IF NOT EXIST "target\asm\TASM\final.exe"" (
+IF NOT EXIST "C:\Users\Usuario\Desktop\LyC\TPCompilador\LyC\target\asm\TASM\final.exe" (
     echo Error: No se generó el archivo final en target\asm\TASM.
     pause
     exit /b 1

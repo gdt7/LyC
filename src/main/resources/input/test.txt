@@ -13,4 +13,8 @@ y := 10 + 20
 
 
 
-*-x := getPenultimatePosition([3, 2, 55, 6, 7, 3 ,68, 9])-*
+x := getPenultimatePosition([3, 2, 55, 6, 7, 3 ,68, 9])
+
+si( a > b){
+	x := 56
+}
