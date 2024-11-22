@@ -43,10 +43,13 @@ import static lyc.compiler.constants.Constants.*;
 
 
 LineTerminator = \r|\n|\r\n
-InputCharacter = [^\r\n]
+
+InputCharacter = [a-zA-Z0-9 \t\r\n.,;!?]
 Identation =  [ \t\f]
 
-Comment = \*-([^\r?\n])*?-\*
+Comment = \*-[^@]*(\r|\n|[^@])*?-\*
+
+
 
 Plus = "+"
 Mult = "*"
@@ -75,6 +78,7 @@ Identifier = {Letter} ({Letter}|{Digit})*
 IntegerConstant = [-]?{Digit}+
 StringConstant = {DoubleQuote}({Letter}|{Digit}|{WhiteSpace}|{Arroba}|{Percent})+{DoubleQuote}
 FloatConstants = {Digit}+[.]{Digit}+ | [.]{Digit}+ | {Digit}+[.]
+
 
 SingleLineComment = "//"{InputCharacter}*
 

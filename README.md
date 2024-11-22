@@ -86,3 +86,40 @@ A tener en cuenta:
 4. Vea los criterios de aprobación de cada entrega para ver qué tests deben funcionar en cada punto de control.
 5. Cada grupo podrá agregar tests que considere apropiados a los tests ya provistos, sin remover ninguno de los test base.
 6. Cada grupo deberá agregar al menos un test para cada uno de sus temas especiales.
+
+
+
+## COMPILACION Y EJECUCION CON DOSBOX:
+
+En el archivo por lotes run.bat, modificar la ruta absoluta de ubicacion de la aplicacion DOSBox en la linea 20.
+En el archivo por lotes run.bat, modificar la ruta absoluta de ubicacion del archivo ejecutable creado, en la linea 23.
+
+## PASOS DE EJECUCION CON DOSBOX:
+1) Inicia DOSBox
+mount c C:\LyC\TPCompilador\LyC\target\asm 
+c:
+cd TASM
+
+2)Ensambla el archivo final.asm
+tasm final.asm
+
+SALIDA ESPERADA
+Turbo Assembler  Version 4.1  Copyright (c) 1988, 1996 Borland International
+Assembling file:   FINAL.ASM
+Error messages:    None
+Warning messages:  None
+Passes:            1
+Remaining memory:  400K
+
+ 4)Vincula el archivo final.obj para crear final.exe
+tlink final.obj
+
+SALIDA ESPERADA
+Turbo Link  Version 7.1  Copyright (c) 1988, 1996 Borland International
+
+5) Verifica la generación del archivo ejecutable
+dir
+Busca final.exe en la lista de archivos.
+
+6)Ejecuta el archivo final.exe
+final.exe

@@ -53,16 +53,20 @@ public class WhileGenerator extends AssemblerGenerator {
 		// HACER ETIQUETAS DINAMICAS
 		String etiqBeginWhile = "etiqWhile_" + cState.getEtiqCount();
 		cState.increaseEtiqCount();
-		ret = new StringBuilder(":" + etiqBeginWhile + ": \n FLD " + var1 + " \n ");
-		ret = ret.append(" FCOM ").append(var2);
-		ret = ret.append(" \n fstsw ax \n sahf \n ");
+		ret = new StringBuilder(etiqBeginWhile + ": \n FILD " + var1 + " \n ");
+		ret =  ret.append(new StringBuilder("FILD " + var2 + " \n "));//***************** */
+		//ret = ret.append(" FCOM ").append(var2);
+		ret = ret.append(" FCOM ST(1) ");
+		//ret = ret.append(" \n fstsw ax \n sahf \n ");
+		ret = ret.append(" \n FSTSW [TEMP] \n MOV AX, [TEMP] \n sahf \n ");
 		// SEGUN EL COMPARISON TYPE TENGO QUE VER QUE JUMP HAGO
 		String possibleLogicalOperator = cState.getAssemblerCodeIt().next();
 		cState.setCurrentIndex(cState.getCurrentIndex() + 1);
 		String jmp = polacaToAssemblerJmp.get(comparisonType);
 		String etiqFinal = "et_final_" + cState.getEtiqCount();
 		cState.increaseEtiqCount();
-		String etiqbloque = "etiq_bloque_" + cState.getEtiqCount();
+		//String etiqbloque = "etiq_bloque:" + cState.getEtiqCount();
+		String etiqbloque = "etiq_bloque:";
 		cState.increaseEtiqCount();
 		// HACER ETIQUETAS DINAMICAS DE ALGUNA FORMA
 		if (logicalOperators.contains(possibleLogicalOperator)) {
@@ -93,7 +97,7 @@ public class WhileGenerator extends AssemblerGenerator {
 			ret.append(jmp + " " + etiqFinal);
 			cState.getOperandStack().push(possibleLogicalOperator);
 		}
-		ret.append(" \n :" + etiqbloque + "\n");
+		ret.append(" \n " + etiqbloque + "\n");
 		System.out.println("currentIndex : " + currentIndex);
 		System.out.println("endIndex : " + endIndex);
 		while ((currentIndex + 3) < Integer.valueOf(endIndex)) {
@@ -106,7 +110,7 @@ public class WhileGenerator extends AssemblerGenerator {
 		cState.increaseIndex();
 		cState.getAssemblerCodeIt().next();
 		cState.increaseIndex();
-		ret = ret.append("JMP " + etiqBeginWhile + ":\n");
+		ret = ret.append("JMP " + etiqBeginWhile + "\n");
 		ret = ret.append( etiqFinal + ":\n");
 
 	return ret;

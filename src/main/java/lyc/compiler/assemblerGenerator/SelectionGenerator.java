@@ -52,14 +52,22 @@ public class SelectionGenerator extends AssemblerGenerator {
 			String endIndex = cState.getAssemblerCodeIt().next();
 			int currentIndex = cState.increaseIndex();
 			System.out.println("CurrentIndex: " + currentIndex);
-			ret = new StringBuilder("FLD " + var1 + " \n ");
-			ret = ret.append(" FCOM ").append(var2);
-			ret = ret.append(" \n fstsw ax \n sahf \n ");
+			ret = new StringBuilder("FILD " + var1 + " \n ");
+			ret = ret.append(new StringBuilder("FILD " + var2 + " \n "));//***************** */
+			//ret = ret.append(" FCOM ").append(var2);
+			ret = ret.append(" FCOM ST(1) ");
+
+			/*FSTSW [TEMP]     ; Guarda el estado de la FPU en la memoria (TEMP)
+    		MOV AX, [TEMP]   ; Cargar el estado de la FPU desde TEMP en AX
+			*/
+			
+			//ret = ret.append(" \n fstsw ax \n sahf \n ");
+			ret = ret.append(" \n FSTSW [TEMP] \n MOV AX, [TEMP] \n sahf \n ");
         	//SEGUN EL COMPARISON TYPE TENGO QUE VER QUE JUMP HAGO
 			String possibleLogicalOperator = cState.getAssemblerCodeIt().next();
 			cState.setCurrentIndex(cState.getCurrentIndex() + 1);
 			String jmp = polacaToAssemblerJmp.get(comparisonType);
-			String etiqFinal = "et_final_" + cState.getEtiqCount();
+			String etiqFinal = " et_final_" + cState.getEtiqCount();
 			cState.increaseEtiqCount();
 			String etiqbloque = "etiq_bloque_" + cState.getEtiqCount();
 			cState.increaseEtiqCount();

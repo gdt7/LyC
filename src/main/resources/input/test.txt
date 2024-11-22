@@ -1,20 +1,24 @@
 *- soy un comentario -*
 
 init {
-    tri: Float
+    tri,tri2: Float
     a ,b, x, y: Int
     s1, s2: String
 }
 
-a := 2
-b := 1
+a := 3
+b := 2
 
 y := 10 + 20
 
 
+si (a > b)
+{
+    x := getPenultimatePosition([3, 2, 55, 6, 7, 3 ,40, 9])
+}
 
-x := getPenultimatePosition([3, 2, 55, 6, 7, 3 ,68, 9])
-
-si( a > b){
-	x := 56
+mientras (b < 5)
+{
+    b := b + 1
+    tri := triangulo(3,a,b)
 }

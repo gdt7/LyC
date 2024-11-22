@@ -98,7 +98,11 @@ public class AsmCodeGenerator implements FileGenerator {
 			}
 
 			fileWriter.write(variableDeclaration.concat("\n"));
+
+			
 		}
+		fileWriter.write("TEMP        DW  ?  ; Variable temporal para almacenar el estado de la FPU".concat("\n"));
+
 		while (!cState.getAssemblerVariables().isEmpty()) {
 			SymbolTableStruct s = cState.getAssemblerVariables().pop();
 			String variableDeclaration = s.getNombre().toString().concat("\t");
