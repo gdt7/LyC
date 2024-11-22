@@ -1,6 +1,6 @@
 @echo off
 echo Compiling test.txt
-java "-jar" "target\lyc-compiler-2.0.0.jar" "target\input\test.txt"
+java "-jar" "target\lyc-compiler-3.0.0.jar" "target\input\test.txt"
 
 REM Verifica si el archivo final.asm fue generado correctamente
 IF NOT EXIST "target\output\final.asm" (

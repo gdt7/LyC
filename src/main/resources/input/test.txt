@@ -14,7 +14,7 @@ y := 10 + 20
 
 si (a > b)
 {
-    x := getPenultimatePosition([3, 2, 55, 6, 7, 3 ,40, 9])
+    x := getPenultimatePosition([3, 2, 55, 6, 7, 3 ,39, 9])
 }
 
 mientras (b < 5)
