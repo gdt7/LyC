@@ -37,8 +37,10 @@ public class WhileGenerator extends AssemblerGenerator {
 		StringBuilder ret = new StringBuilder();
 		CompilerState cState = CompilerImpl.getInstance().getCompilerState();
 		String var1 = cState.getAssemblerCodeIt().next();
+		var1 = "_" + var1;  // Agregar _ al primer operando
 		cState.increaseIndex();
 		String var2 = cState.getAssemblerCodeIt().next();
+		var2 = "_" + var2;  // Agregar _ 
 		cState.increaseIndex();
 		cState.getAssemblerCodeIt().next();
 		cState.increaseIndex();

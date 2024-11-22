@@ -94,6 +94,7 @@ public class AsmCodeGenerator implements FileGenerator {
 				 // Concatenamos el tipo de assembler con el nombre de la variable
 				 variableDeclaration = variableDeclaration.concat("\t").concat(assemblerType);
 				 variableDeclaration = variableDeclaration.concat("\t").concat(valor);
+				 //System.out.println("SOOOOOOOOOOOOOOOY" + variableDeclaration);
 			}
 
 			fileWriter.write(variableDeclaration.concat("\n"));
@@ -104,10 +105,12 @@ public class AsmCodeGenerator implements FileGenerator {
 
 			if (s.getTipoDato() != null) {
 				//variableDeclaration = variableDeclaration.concat(s.getTipoDato());
-				variableDeclaration = variableDeclaration.concat("\tDD").concat("\t?");
+				variableDeclaration = variableDeclaration.concat("\tDW").concat("\t?");
 			}
 			fileWriter.write(variableDeclaration.concat("\n"));
 		}
+
+		
 		return ret;
 	}
 

@@ -1,67 +1,16 @@
 *- soy un comentario -*
 
 init {
-    a, b1 , h1,tri,tri2: Float
-    *- x,a1 : Float -*
-    variable1,x, z ,aInt,bInt,cInt,dInt : Int
-    p1, p2, p3, z4 , a1,b: String
-    *-validacion de duplicacion de variable -*
-    *-tri, tri1, tri2, tri3, tri4, tri5, p1, p2, p3, z4 , a1,bStr,b: String-*
+    tri: Float
+    a ,b, x, y: Int
+    s1, s2: String
 }
 
-*- validación de tipos de dato en asignacion -*
-*-a := "hola"-*
-*-bStr := "hola"-*
+a := 2
+b := 1
 
-*- validación de cotas flotantes -*
-*- a := 99999999999.99 -*
-
-*- validación de cotas enteros -*
-*- a := 99999999999999999 -*
-
-*-descomentar para error de variable no declarada -*
-*-  apu := 9999.99-*
-a := 99.
-a := .9999
-
-*- validación de longitud strings -*
-*- b := "asdaadadasdadasdadasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd" -*
-b := "@sdADaSjfla%dfg"
-b := "asldk  fh sjf"
-b := 9
-
-*- error carácter invalido -*
-*- c := ʉ -*
-
-x := 2.9 
-z := 2.909
-
-aInt := 1.9
-
-mientras (aInt > bInt)
-{
-	escribir( "a es mas grande que b" )
-}
-
-si(aInt > bInt OR cInt > dInt)
-{
-	   escribir("a es mas grande que b")
-}
-sino
-{
-	  escribir("b es mas grande que a")
-}
+y := 10 + 20
 
 
 
-x := getPenultimatePosition([3, 8.2, 2, 55.5, 6, 7.8, 3 ,68, 9.0])
-
-*- Ejemplo de variable que excede el limite de caracteres -*
-*- z := "asdasdasdasdasdasdasdwrqwqrwqrqwr121525125125125sasfsafasfasrf124421125125" -*
-
-*- Ejemplo de funcion triangulo con error -*
-*- tri3 := triangulo(3/x,z+4,b*26,b) -*
-
-*- Ejemplo de funcion getPenultimatePosition con error -*
-*- x := getPenultimatePosition([3, 8.2, 2, 55.5) -*
-*- x := getPenultimatePosition([3, 8.2, 2, 55.5,b]) -*
+*-x := getPenultimatePosition([3, 2, 55, 6, 7, 3 ,68, 9])-*

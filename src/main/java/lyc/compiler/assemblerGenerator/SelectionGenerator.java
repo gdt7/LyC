@@ -44,7 +44,9 @@ public class SelectionGenerator extends AssemblerGenerator {
 		CompilerState cState = CompilerImpl.getInstance().getCompilerState();
 		if (cState.getOperandStack().size() >= 2) {
 			String var1 = cState.getOperandStack().pop();
+			var1 = "_" + var1;  // Agregar _ al primer operando
 			String var2 = cState.getOperandStack().pop();	
+			var2 = "_" + var2;  // Agregar _ al primer operando
 			String comparisonType = cState.getAssemblerCodeIt().next();
 			cState.increaseIndex();
 			String endIndex = cState.getAssemblerCodeIt().next();
